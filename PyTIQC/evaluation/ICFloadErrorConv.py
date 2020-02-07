@@ -28,6 +28,6 @@ for key, fname in dephase_files_dict.items():
 
 d = shelve.open("evaluation/dephasefidconv.shlv")
 for key, csv in dephase_dict.items():
-    print key, np.shape(csv)
+    print(key, np.shape(csv))
     d[key] = csv
 d.close()

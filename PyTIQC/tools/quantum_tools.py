@@ -23,7 +23,7 @@ def PartialTrace(psirho, dim_list, trace_elements):
     trace_elements = np.array(trace_elements)-1
     # check arguments
     if np.any( trace_elements > len(dim_list)-1) or np.any(trace_elements < 0):
-        print 'Invalid trace element'
+        print('Invalid trace element')
 
     n = len(dim_list)
     rdim = dim_list[::-1]
@@ -34,8 +34,8 @@ def PartialTrace(psirho, dim_list, trace_elements):
     if len(psirho.shape) == 1:
         # state vector
         perm = n-1-np.array(keep[::-1].tolist()+trace_elements.tolist())
-        print perm
-        print rdim
+        print(perm)
+        print(rdim)
         x = np.reshape(np.transpose(np.reshape(psirho, rdim,'FORTRAN'),perm), [dimkeep,dimtrace], 'FORTRAN')
         rho_traced = np.dot(x,x.conjugate().transpose())
 

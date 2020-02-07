@@ -10,15 +10,15 @@ import scipy.stats as spst
 import scipy.linalg as splg
 import os, sys, shelve, time, copy, shelve
 
-import readdata as rd
+from . import readdata as rd
 import PyTIQC.tools.progressbar as progressbar
 import PyTIQC.core.gates as U
 import PyTIQC.core.simtools as sim
 import PyTIQC.core.qctools as qc
-import InvestigatePulseSeq as ips
-import EvaluateData as evd
-import processtomography.quantumprocess as qproc
-import processtomography.proctom as proctom
+from . import InvestigatePulseSeq as ips
+from . import EvaluateData as evd
+from .processtomography import quantumprocess as qproc
+from .processtomography import proctom
 
 pi = np.pi
 
@@ -92,15 +92,15 @@ class InCircuitFidelity:
         self.fidelity = fidelity
         self.fidtype = fidtype
         if self.verbose:
-            print "using fidelity measure =", self.fidtype
+            print("using fidelity measure =", self.fidtype)
 
     def use_error_metric(self, errormetric="last"):
         if errormetric == "mean" or "last" or "rel" or "one" or "wtail" or "wtail_rel":
             self.errormetric = errormetric
             if self.verbose: 
-                print "using error metric = ", errormetric
+                print("using error metric = ", errormetric)
         else:
-            print "WARNING: invalid error metric: must be one of 'mean', 'last', 'rel', 'one', 'wtail' or 'wtail_rel'. defaulting to 'last'"
+            print("WARNING: invalid error metric: must be one of 'mean', 'last', 'rel', 'one', 'wtail' or 'wtail_rel'. defaulting to 'last'")
             self.errormetric = "last"
 
     def loadDataNPY(self, files_dict):
@@ -123,9 +123,9 @@ class InCircuitFidelity:
                 self.gates_dict[key].append(i)
         
         if printit:
-            print "Available gates in sequence and their positions:"
+            print("Available gates in sequence and their positions:")
             for (key, val) in self.gates_dict.iteritems():
-                print "  ", self._printGatetype(key), ":", val
+                print("  ", self._printGatetype(key), ":", val)
 
     def _printGatetype(self, gatetype):
         ''' convert the pi's in a gatetype tuple to human-readable format '''
@@ -159,7 +159,7 @@ class InCircuitFidelity:
 
 
         if pos >= len(self.gates):
-            print "warning: less than", pos+1, "gates in sequence. default to first appearance."
+            print("warning: less than", pos+1, "gates in sequence. default to first appearance.")
             pos = 0
             self.gatepos = self.gates[pos]
         elif pos >= 0:
@@ -171,10 +171,10 @@ class InCircuitFidelity:
             self.gatepos = self.gates[0]
 
         if self.verbose:
-            print "matching gate", self._printGatetype(self.gatetype), "at pos", self.gatepos, "appearing", len(self.gates), "times at positions", self.gates
+            print("matching gate", self._printGatetype(self.gatetype), "at pos", self.gatepos, "appearing", len(self.gates), "times at positions", self.gates)
 
         if len(self.gates) == 0:
-            print "warning: no gate of type", gatetype, "found"
+            print("warning: no gate of type", gatetype, "found")
 
     def setNoisetype(self, noisetype, indrange=None):
         ''' turn on the desired decoherence source '''
@@ -182,9 +182,9 @@ class InCircuitFidelity:
         if noisetype in self.dec.dict.keys():
             self.dec.dict[noisetype] = True
             if self.verbose:
-                print "matching noise:", self.noisetype
+                print("matching noise:", self.noisetype)
         else:
-            print "noise type", noisetype, "not found in dec.dict, skipping"
+            print("noise type", noisetype, "not found in dec.dict, skipping")
 
         self.indrange = indrange
 
@@ -212,8 +212,7 @@ class InCircuitFidelity:
         self.dict_params[noisetype][0](new_param)
 
         if self.verbose:
-            print 'set dec.dict_params[', noisetype, '] =', \
-               np.around(new_param, 3)
+            print('set dec.dict_params[', noisetype, '] =', np.around(new_param, 3))
 
     def randomizeevolution(self, numwidths, convtype=None, std=False, PTerrorbars=True):
         ''' parametrize noise by width '''
@@ -263,12 +262,12 @@ class InCircuitFidelity:
             self.gatefid25[ind] = gatefid25
 
             if self.verbose:
-                print "simerror = %0.4f +/- %0.4f" % (simerror, simerror_std)
-                print "gate fidelity = %0.4f + %0.4f - %0.4f" % (gatefidmed, gatefid75, gatefid25)
+                print("simerror = %0.4f +/- %0.4f" % (simerror, simerror_std))
+                print("gate fidelity = %0.4f + %0.4f - %0.4f" % (gatefidmed, gatefid75, gatefid25))
 
         toc = time.time()
         if self.verbose:
-            print "runtime:", toc-tic, "seconds"
+            print("runtime:", toc-tic, "seconds")
 
     def randomizeOnce(self, indreal):
         ''' run once with the matching gate error '''
@@ -403,7 +402,7 @@ class InCircuitFidelity:
         strgatetype = str((self.gatetype[0], self.gatetype[1]))
 
         if self.noisetype != 'dephase':
-            print "no analytical formula defined for ", self.noisetype
+            print("no analytical formula defined for ", self.noisetype)
             return self.calculateGateFidelity(std=False)
 
         if self.dephasesinglefile != None:
@@ -412,8 +411,8 @@ class InCircuitFidelity:
             try:
                 d = shelve.open(self.dephasetheoryfile)
                 dephasecsv = d[str(nuions)+strgatetype]
-            except KeyError, e:
-                print "Exception occurred in gate fidelity conversion: ", e
+            except KeyError as e:
+                print("Exception occurred in gate fidelity conversion: ", e)
                 return self.calculateGateFidelity(std=False)
 
         fidphase = lambda x: np.interp(x, dephasecsv[:,0], dephasecsv[:,1])
@@ -430,9 +429,9 @@ class InCircuitFidelity:
               for i in range(self.data.numruns):
                 chi_id = qproc.Unitary2Chi(pulse.Uidtr)
                 chi_sim = qproc.Unitary2Chi(pulse.UtrAll[i])
-                #print "Unitaries:"
-                #print np.around(chi_id,3) # TEMP
-                #print np.around(chi_sim,3)
+                #print("Unitaries:")
+                #print(np.around(chi_id,3) # TEMP)
+                #print(np.around(chi_sim,3))
                 gatefid_pulse.append(U.fidelity(chi_id, chi_sim))
               gatefid.append(gatefid_pulse)
 
@@ -452,7 +451,7 @@ class InCircuitFidelity:
 
     def calculateGateFidelityProcTomo(self, ErrorBars=False, ind=None):
         ''' use proctomo to convert error of gate to fidelity '''
-        #print "Using ProcTomo to calculate gate fidelity. This may take a while ..."
+        #print("Using ProcTomo to calculate gate fidelity. This may take a while ...")
 
         if ind != None:
             indreal = [ind]
@@ -488,9 +487,9 @@ class InCircuitFidelity:
             chi = proctom.proctomo(data_proctom, 100)
             chiId = qproc.Unitary2Chi(newpulseseq[0].Uidtr.conjugate())
             result.append(U.jozsafid(chiId, chi))
-            #print "PT:"
-            #print np.around(chiId,3)
-            #print np.around(chi,3) # TEMP
+            #print("PT:")
+            #print(np.around(chiId,3))
+            #print(np.around(chi,3) # TEMP)
 
         if ind != None and ErrorBars:
             result.sort()
@@ -498,10 +497,10 @@ class InCircuitFidelity:
             result.remove(result[0])
 
         if not ErrorBars:
-            print self._printGatetype(self.gatetype),":", np.around(result[0],4)
+            print(self._printGatetype(self.gatetype),":", np.around(result[0],4))
             return [result[0], result[0], result[0]]
         else:
-            print self._printGatetype(self.gatetype) + " : %0.4f + %0.4f - %0.4f" % (np.around(result[0],4), np.around(result[1]-result[0],4), np.around(result[0]-result[2],4) )
+            print(self._printGatetype(self.gatetype) + " : %0.4f + %0.4f - %0.4f" % (np.around(result[0],4), np.around(result[1]-result[0],4), np.around(result[0]-result[2],4) ))
             return result
 
 
@@ -536,22 +535,22 @@ class InCircuitFidelity:
             self.error0 = brentq(fittedfunc_0, np.min(x), np.max(x))
             try:
                 self.error0min = brentq(fittedfunc_min_0, np.min(x), np.max(x))
-            except ValueError, e:
+            except ValueError as e:
                 self.error0min = self.error0
             try:
                 self.error0max = brentq(fittedfunc_max_0, np.min(x), np.max(x))
-            except ValueError, e:
+            except ValueError as e:
                 self.error0max = self.error0
 
             fiderrorbars = (self.error0max - self.error0min) /2
             if self.verbose:
-                print 
-                print "FIT SUMMARY:"
-                print "exp error = %0.4f +/- %0.4f" % (self.expfid, self.expfiderr)
-                print "parametrized matching error of gate = %0.4f (+ %0.4f | - %0.4f)" % (self.error0, self.error0max-self.error0, self.error0-self.error0min)
-        except ValueError, e:
-            print "experror: %0.4f" % self.expfid
-            print "ERROR: fidelity matching failed:", e
+                print()
+                print("FIT SUMMARY:")
+                print("exp error = %0.4f +/- %0.4f" % (self.expfid, self.expfiderr))
+                print("parametrized matching error of gate = %0.4f (+ %0.4f | - %0.4f)" % (self.error0, self.error0max-self.error0, self.error0-self.error0min))
+        except ValueError as e:
+            print("experror: %0.4f" % self.expfid)
+            print("ERROR: fidelity matching failed:", e)
             self.error0 = -1
             self.error0min = -1
             self.error0max = -1
@@ -598,16 +597,16 @@ class InCircuitFidelity:
             gatefiderr = (gatefidmax-gatefidmin)/2.
 
             if gatefidmax == gatefidmid: gatefidmax = 1. # upper bound on error
-            print "gate fidelity obtained from fitting to error param:"
-            print self._printGatetype(self.gatetype), \
+            print("gate fidelity obtained from fitting to error param:")
+            print(self._printGatetype(self.gatetype), \
                 ": %0.4f (+ %0.4f | - %0.4f)" \
-                %(gatefidmid, gatefidmax-gatefidmid, gatefidmid-gatefidmin)
+                %(gatefidmid, gatefidmax-gatefidmid, gatefidmid-gatefidmin))
 
-        except ValueError, e:
-            print "ERROR: function evaluation failed: ", e
+        except ValueError as e:
+            print("ERROR: function evaluation failed: ", e)
             gatefidmid = np.min(self.gatefidfunc(x))
             gatefiderr = 0
-            print self._printGatetype(self.gatetype), ": (lower bound) %0.4f" %(gatefidmid)
+            print(self._printGatetype(self.gatetype), ": (lower bound) %0.4f" %(gatefidmid))
 
         if displ:
             fig = pl.figure(displ)
@@ -647,24 +646,24 @@ class InCircuitFidelity:
             try:
                 self.error1min = brentq(gatefidfunc_min_0, 
                                  np.min(self.gatefid), np.max(self.gatefid) )
-            except ValueError, e:
+            except ValueError as e:
                 self.error1min = self.error1
             try:
                 self.error1max = brentq(gatefidfunc_max_0, 
                                  np.min(self.gatefid), np.max(self.gatefid) )
-            except ValueError, e:
+            except ValueError as e:
                 self.error1max = self.error1
 
             fiderrorbars = (self.error1max - self.error1min) /2
             if self.error1max == self.error1: 
                 self.error1max = 1  # upper bound on fidelity
 
-            print "gate fidelity obtained from fitting after gate fidelity conversion:"
-            print self._printGatetype(self.gatetype), \
+            print("gate fidelity obtained from fitting after gate fidelity conversion:")
+            print(self._printGatetype(self.gatetype), \
                 ": %0.4f (+ %0.4f | - %0.4f)" \
-                %(self.error1, self.error1max-self.error1, self.error1-self.error1min)
-        except Exception, e:
-            print "ERROR: fitting failed: ", e
+                %(self.error1, self.error1max-self.error1, self.error1-self.error1min))
+        except Exception as e:
+            print("ERROR: fitting failed: ", e)
             self.error1 = -1
             self.error1min = -1
             self.error1max = -1

@@ -36,11 +36,11 @@ ppservers = tuple(ppservers)
 if len(ppservers) > 0: ncpus = 0
 else: ncpus = 'autodetect'
 
-print ppservers
+print(ppservers)
 
 job_server = pp.Server(ncpus=ncpus, ppservers=ppservers, secret="tiqc_cluster1")
 
-print "Starting pp with", job_server.get_ncpus(), "workers"
+print("Starting pp with", job_server.get_ncpus(), "workers")
 
 start_time = time.time()
 
@@ -48,11 +48,11 @@ start_time = time.time()
 inputs = [x for x in xrange(10000, 100000, 1000)]
 jobs = [(input, job_server.submit(sum_primes,(input,), (isprime,), ("math",))) for input in inputs]
 for input, job in jobs:
-    print "Sum of primes below", input, "is", job()
+    print("Sum of primes below", input, "is", job())
 
-print "Time elapsed: ", time.time() - start_time, "s"
+print("Time elapsed: ", time.time() - start_time, "s")
 job_server.print_stats()
 
-print job_server.get_active_nodes()
+print(job_server.get_active_nodes())
 
 # Parallel Python Software: http://www.parallelpython.com

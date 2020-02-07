@@ -271,7 +271,7 @@ class ReadData:
             if p.match(item) != None:
                 matched_keys.append(item)
         for item in matched_keys:
-            print item + ": " + str(self.parameters[item])
+            print(item + ": " + str(self.parameters[item]))
 
 
     def plot_data(self):
@@ -383,7 +383,7 @@ class ReadData:
             if other_data != otherme: 
                 otherme.__add__(other_data, use_copy=False)
             else:
-                print "cannot add myself"
+                print("cannot add myself")
         return otherme
 
     def __add__(self, otherme, use_copy=True):
@@ -426,7 +426,7 @@ def readcqst(filename, path =None, nr_of_splits=2, nr_of_ions=4):
     data = np.loadtxt(path+filename, skiprows=1)
     seq_par_list = data[:,0]
     nr_of_cycles = data.shape[1]
-    print nr_of_cycles
+    print(nr_of_cycles)
     cprb_split_list = []
     for split_item in xrange(nr_of_splits):
         frame_cprb = np.zeros((len(seq_par_list), 2**nr_of_ions+1))
@@ -448,10 +448,10 @@ def readcqst(filename, path =None, nr_of_splits=2, nr_of_ions=4):
                 if my_single > 0:
                     my_count += 1
                     my_pos = convert_to_cprb_pos(my_single)
-#                    print str(my_single) + " - " + str(my_pos)
+#                    print(str(my_single) + " - " + str(my_pos))
                     cprb_split_list[mysplit_index][seq_index][my_pos+1] += 1
 #                    cprb_split_list[0][seq_index][my_pos+1] += 1
-#            print my_count
+#            print(my_count)
             if my_count == 0 :                   
                 raise RuntimeError("Zero counts on one possibility detected - Need more data - duh")
     return cprb_split_list

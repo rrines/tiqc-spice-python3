@@ -7,14 +7,14 @@
 
 import numpy as np
 
-import proctom
-import optimizechi
+from . import proctom
+from . import optimizechi
 
 import numpy.matlib as npml
 
 
 #import PyTIQC.evaluation.densitymatrixreconstruction.densitymatrix as dm
-import densitymatrix as dm
+from . import densitymatrix as dm
 
 def Unitary2Chi(U, B = None):
     """
@@ -150,7 +150,7 @@ def proctomo_trace(data, NumberOfIterations = 100, trace_list = [], id_chi=None,
     dat_traced = ct.traceions(data,trace_list)
     pt = proctomo(dat_traced, NumberOfIterations=NumberOfIterations, use_bell_basis=use_bell_basis)
     if id_chi != None:
-        print "unrotated fid: " + str(abs(pt[0,0]))
+        print("unrotated fid: " + str(abs(pt[0,0])))
         optimizechi.findoptimizedrot(id_chi, pt)
     return pt
 
@@ -163,7 +163,7 @@ if __name__ == "__main__":
     chi[2,2] = 1
 
     choi = OSumToChoi(chi)
-#    print choi
+#    print(choi)
 
     p = 0.5
     mykraus = np.zeros((2,2,2), dtype=complex)
@@ -175,10 +175,10 @@ if __name__ == "__main__":
     ew, ev = np.linalg.eig(choi)
     for k in xrange(ev.shape[0]):
         if ew[k] > 10e-5:
-            print ew[k]
-            print ew[k]*ev[:,k].reshape(2,2).transpose()
+            print(ew[k])
+            print(ew[k]*ev[:,k].reshape(2,2).transpose())
             # op=np.zeros((2,2), dtype = complex)
-            # print 2*ew[k]*np.outer(ev[:,k],ev[:,k].transpose().conjugate())
+            # print(2*ew[k]*np.outer(ev[:,k],ev[:,k].transpose().conjugate()))
 
     # chi_id = np.zeros((4**1,4**1))
     # chi_id[0,0]=.5
@@ -189,13 +189,13 @@ if __name__ == "__main__":
 #    choi2 = OSumToChoi(chi_id)
 
     # import qpython.tools.quantum_tools as qtls
-    # print choi1-choi2
-    # print np.trace(qtls.sqrtm_dm(np.dot(np.dot(qtls.sqrtm_dm(choi2),choi1),qtls.sqrtm_dm(choi2))))**2
+    # print(choi1-choi2)
+    # print(np.trace(qtls.sqrtm_dm(np.dot(np.dot(qtls.sqrtm_dm(choi2),choi1),qtls.sqrtm_dm(choi2))))**2)
 
     # testqp = QuantumProcess(chi)
-    # print testqp.cj_fidelity(chi_id)
-    # print testqp.fidelity(chi_id)
-    # print testqp.cj_distance(chi_id)
+    # print(testqp.cj_fidelity(chi_id))
+    # print(testqp.fidelity(chi_id))
+    # print(testqp.cj_distance(chi_id))
 
     # UToff_TM_normal=np.array([[1, 0, 0, 0, 0, 0, 0, 0],
     #                       [0, 1, 0, 0, 0, 0, 0, 0],
@@ -211,7 +211,7 @@ if __name__ == "__main__":
     # a = proctom.getopbase()
     # u = a[3]
     # chiout = Unitary2Chi(u)
-    # print chiout
+    # print(chiout)
 
 
 

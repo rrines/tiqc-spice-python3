@@ -69,13 +69,13 @@ def data_optimize(inputparam, params, dec):
     inbalance = abs(data.P_PMT_end[2]-data.P_PMT_end[5])
     unwanted = abs(data.P_PMT_end[0]+data.P_PMT_end[1]+data.P_PMT_end[3]+data.P_PMT_end[4])
     
-    print inputparam, inbalance+unwanted
+    print(inputparam, inbalance+unwanted)
 
     return inbalance+unwanted
     
-#print spop.fmin(data_optimize, 1., args=(params, dec), full_output=True)
-#print "omrabi factor =", 
-#print "for params.MSdelta=", params.MSdelta, "shortestMS=", params.shortestMS
+#print(spop.fmin(data_optimize, 1., args=(params, dec), full_output=True))
+#print("omrabi factor =", )
+#print("for params.MSdelta=", params.MSdelta, "shortestMS=", params.shortestMS)
 
 
 def parity(data, params):
@@ -115,9 +115,9 @@ def parity(data, params):
     pl.ylabel('parity')
     pl.show()
 
-    print "population = ", population
-    print "coherence contrast = ", coherence
-    print "fidelity = ", fidelity
+    print("population = ", population)
+    print("coherence contrast = ", coherence)
+    print("fidelity = ", fidelity)
     return phase, parity, pulseseq
 
 def MSpulseshaped():
@@ -130,7 +130,7 @@ def MSpulseshaped():
     result = np.zeros([len(pulselen), 2])
 
     for i in range(len(pulselen)):
-        print "pulse length ", pulselen[i]
+        print("pulse length ", pulselen[i])
         pulseseq = sim.PulseSequence( [ sim.RMS(params, pulselen[i], 0, -1) ] )
         realpulselen[i] = pulseseq[0].duration
         data = qc.simulateevolution(pulseseq, params, dec)
@@ -142,7 +142,7 @@ def MSpulseshaped():
     pl.plot(realpulselen, result)
     pl.show()
 
-    print "MSpulseshaped() runtime ", toc-tic, "sec"
+    print("MSpulseshaped() runtime ", toc-tic, "sec")
 
     return realpulselen, result
 
@@ -158,7 +158,7 @@ def timestepcheck(params, dec):
 
     for i in range(len(timesteps)):
         params.ODEtimestep = timesteps[i]
-        print "timestep = ", params.ODEtimestep
+        print("timestep = ", params.ODEtimestep)
         data = qc.simulateevolution(pulseseq, params, dec)
         result[i,0] = abs(data.Yend[0])**2
         result[i,1] = abs(data.Yend[int(3*len(data.Yend)/4)])**2

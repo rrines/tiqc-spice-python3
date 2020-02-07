@@ -8,11 +8,12 @@ import PyTIQC.tools.progressbar
 import PyTIQC.tools.progressbar as progbar
 import PyTIQC.tools.progressbar as progressbar
 
-import simtools
-import qmtools
-import qctools
-import pp
-import sequel
+from . import simtools
+from . import qmtools
+from . import qctools
+from . import sequel
+try: import pp
+except: pass
 
 import copy, logging, shelve
 
@@ -125,8 +126,8 @@ def simulateevolutionOnce(pulseseq, params, dec):
                 #######
 
             if dec.doPPprintstats:
-                print "Starting PP with", job_server.get_ncpus(), \
-                      "local workers and", params.ppservers
+                print("Starting PP with", job_server.get_ncpus(), \
+                      "local workers and", params.ppservers)
 
         if dec.progbar:
             widgets = [progbar.Percentage(), ' ', progbar.Bar(),' ', progbar.ETA() ]
@@ -150,7 +151,7 @@ def simulateevolutionOnce(pulseseq, params, dec):
                 rn = np.random.uniform()
                 r_qubit = int(np.floor(np.random.uniform(0,params.hspace.nuions)))
                 if rn < params.stateiniterr*params.hspace.nuions:
-                    #print "   init error on ion ", r_qubit
+                    #print("   init error on ion ", r_qubit)
                     params.addressing[:,r_qubit] = 0
                 # propagate addressing matrix to the pulses
                 for i in range(len(pulseseq)):
@@ -210,7 +211,7 @@ def simulateevolutionOnce(pulseseq, params, dec):
                     try:
                         data += data1
                     except ValueError:
-                        print "adding data failed, abandoning this instance"
+                        print("adding data failed, abandoning this instance")
                         continue
 
             ### initialization error
@@ -243,7 +244,7 @@ def simulateevolutionOnce(pulseseq, params, dec):
                 for job in jobs:
                     data1 = job()
                     if data1 == None:
-                        print "simulationCore failed, continuing"
+                        print("simulationCore failed, continuing")
                         continue
                     if dec.progbar:
                         jobcounter+=1
@@ -254,7 +255,7 @@ def simulateevolutionOnce(pulseseq, params, dec):
                         try:
                             data += data1
                         except ValueError:
-                            print "adding data failed, abandoning this instance"
+                            print("adding data failed, abandoning this instance")
                             continue
                 
                 if params.savedata:
@@ -262,7 +263,7 @@ def simulateevolutionOnce(pulseseq, params, dec):
 
             # print pp stats
             if dec.doPPprintstats:
-                print "PP server active: ", job_server.get_active_nodes()
+                print("PP server active: ", job_server.get_active_nodes())
                 job_server.print_stats()
 
             #job_server.logger.removeHandler(fh)    
@@ -352,7 +353,7 @@ def simulationCore(pulseseq, params, dec):
             pcur = p0
             HTsaved = None
             if params.printpulse:
-                print "Pulse ", p0, ":",  pulse
+                print("Pulse ", p0, ":",  pulse)
             if params.progbar and pulseseq.seqqc[p0].type != 'M':
                 widgets = [progressbar.Percentage(), ' ', progressbar.Bar(),' ', progressbar.ETA()]
                 pbar = progressbar.ProgressBar(widgets=widgets).start()
@@ -454,7 +455,7 @@ def simulationCore(pulseseq, params, dec):
                 ynew = ynew / np.sqrt(np.sum(np.power(abs(ynew),2)))
                 ycur = ynew
                 if abs(ynew[-1])**2 > 0.25:
-                    print "Warning: further heating will exceed phonon space"
+                    print("Warning: further heating will exceed phonon space")
 
             ycur = ynew
             tcur = tcur+tlen
@@ -498,7 +499,7 @@ def simulationCore(pulseseq, params, dec):
                 activeions = len(np.nonzero(pulse.targetion)[0])
                 omc_fac = params.MShidecorr[activeions, nuions]
                 if omc_fac == -1:
-                    print "MS w/ hiding correction factor invalid, ignoring"
+                    print("MS w/ hiding correction factor invalid, ignoring")
                 else:
                     pulse.omrabi_b = params.omc_ms * omc_fac
                     pulse.omrabi_r = params.omc_ms * omc_fac
@@ -550,7 +551,7 @@ def simulationCore(pulseseq, params, dec):
                     ynew = ynew / np.sqrt(np.sum(np.power(abs(ynew),2)))
                     ycur = ynew
                     if abs(ynew[-1])**2 > 0.25:
-                        print "Warning: further heating will exceed phonon space"
+                        print("Warning: further heating will exceed phonon space")
                     Yloc[-1,:] = np.asarray(ynew.T)
                 
             ms_ode = solver(HT, tcur, pendtime, stepduration, np.ravel(ycur), \

@@ -72,10 +72,10 @@ class ODE_timeevo:
         while eq.successful() and eq.t < self.tend:
             eq.integrate(eq.t+self.delta_t)
             if not eq.successful():
-                print "ODE solver failed, exiting"
+                print("ODE solver failed, exiting")
                 break
             if k >= np.shape(self.y)[1]:
-                #print "warning: index exceeded, exiting"
+                #print("warning: index exceeded, exiting")
                 break
             self.y[:,k] = eq.y
             self.pop[:,k] = np.abs(eq.y)**2
@@ -134,7 +134,7 @@ class Chebyshev_timeevo:
             if self.Emax < np.max(eig_energ):
                 self.Emax = np.max(eig_energ)
 
-        print 'precalc took: ', time.time()-t1, ' s'
+        print('precalc took: ', time.time()-t1, ' s')
         # arg for part of time evo
 
     def do_definitions(self):
@@ -215,7 +215,7 @@ if __name__ == "__main__":
 
     t2 = time.time()
     a = Chebyshev_timeevo(H, T0, Tmax, delta_t, psiin)
-    print 'chebyshev evo: ',time.time()-t2
+    print('chebyshev evo: ',time.time()-t2)
 
 
     # ------------------

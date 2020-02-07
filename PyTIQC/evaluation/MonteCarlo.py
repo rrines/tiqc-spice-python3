@@ -14,10 +14,10 @@ Example:
 
 import types
 import numpy as np
-import readdata as rd
-import densitymatrixreconstruction.IterML as IterML
-import processtomography.proctom as proctom
-import processtomography.quantumprocess as quantumprocess
+from . import readdata as rd
+from .densitymatrixreconstruction import IterML
+from .processtomography import proctom
+from .processtomography import quantumprocess
 
 
 class MonteCarloState:
@@ -56,17 +56,17 @@ class MonteCarloState:
                 if self.verbose:
                     print("Processing sample " + str(index) + " of " +str(self.nr_of_samples))
                 data = self.generate_data()
-                #print data
+                #print(data)
                 matrix = self.tomography_fun(data,100)
-                #print matrix.exp_chi
+                #print(matrix.exp_chi)
                 distance = self.get_distance(matrix)
-                #print distance
+                #print(distance)
                 self.distance_list.append(distance)
                 if save_matrices:
                    self.matrix_list.append(matrix)
                 self.finished_samples += 1
         except KeyboardInterrupt:
-            print "Fetched Keyboard interupt. Exiting"
+            print("Fetched Keyboard interupt. Exiting")
 
     def generate_data(self):
         multi_data = np.zeros(self.data_array.shape)
@@ -87,7 +87,7 @@ class MonteCarloState:
         elif self.measure == 'sso':
             return abs(matrix.sso(self.ideal_object))
         else:
-            print "ERROR: measure", measure, "not defined"
+            print("ERROR: measure", measure, "not defined")
             return 0
 
     def get_data(self, raw_data, path, nr_of_cycles=None):
@@ -109,8 +109,8 @@ class MonteCarloState:
         self.mean_distance = np.mean(self.distance_list)
         self.std_distance = np.std(self.distance_list)
         if self.verbose:
-            print "Mean distance: " + str(self.mean_distance)
-            print "Distance std deviation: " + str(self.std_distance)
+            print("Mean distance: " + str(self.mean_distance))
+            print("Distance std deviation: " + str(self.std_distance))
 
 class MonteCarloProcess(MonteCarloState):
     """Monte Carlo Analysis for a process tomography"""

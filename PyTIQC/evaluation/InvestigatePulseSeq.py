@@ -15,11 +15,12 @@ of tomographies (state, process, etc)
 
 import PyTIQC.core.qctools as qc
 import PyTIQC.core.simtools as sim
-import densitymatrixreconstruction as dmr
-import processtomography.proctom as proctom
+from . import densitymatrixreconstruction as dmr
+from . processtomography import proctom
 
 import numpy as np
-import pp
+try: import pp
+except: pass
 mod = np.mod
 pi = np.pi
 
@@ -203,7 +204,7 @@ class ScanParameter_in_Sequence:
     def runSingle(self, index, param):
         """ run the simulation for one auto-generated pulse sequence """
         if self.verbose:
-            print 'running parameter: '+str(param)
+            print('running parameter: '+str(param))
         self.simdec.progbar = False
         self.simdec.doPPprintstats = False
         # create the current seq
@@ -257,7 +258,7 @@ class ScanParameter_in_Sequence:
         for job in jobs:
             [dataobj, index] = job()
             if dataobj == None:
-                print "simulationCore failed, exiting"
+                print("simulationCore failed, exiting")
                 return None
             self.calc_output(dataobj, index)
             self.sampledata = dataobj
@@ -279,7 +280,7 @@ class ScanParameter_in_Sequence:
             if self.pbar:
                 self.pbar.update(int(min([k*batchsize, max(self.parameter)])*100./len(self.parameter)))
             if self.verbose:
-                print 'running parameter: ', np.min(parlist), '-', np.max(parlist)
+                print('running parameter: ', np.min(parlist), '-', np.max(parlist))
 
             params_list = []
             pulseseq_list = []
@@ -334,9 +335,9 @@ if __name__ == "__main__":
         data_dmr = ScanObj.output_dict['qstates_camera']
         rho = dmr.IterML.iterfun(data_dmr, 100)
         if np.real(rho[-1,-1]) > 0.99:
-            print 'statetomo passed'
+            print('statetomo passed')
         else:
-            print 'statetomo failed'
+            print('statetomo failed')
 
     if runProcTomo or runProcTomoPP:
         NumberOfIons = 2
@@ -361,6 +362,6 @@ if __name__ == "__main__":
         data_proctom = ScanObj.output_dict['qstates_camera']
         chi = proctom.proctomo(data_proctom, 100)
         if np.real(chi[0,0]) > 0.99:
-            print 'proctomo passed'
+            print('proctomo passed')
         else:
-            print 'proctomo failed'
+            print('proctomo failed')

@@ -7,8 +7,8 @@
 #  url        http://wiki.havens.de
 #  rcs        $Id$
 
-import core
-import evaluation
-import tools
+from . import core
+from . import evaluation
+from . import tools
 
 # __init__.py ends here

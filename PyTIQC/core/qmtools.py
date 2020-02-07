@@ -4,8 +4,8 @@ import numpy as np
 import numpy.matlib as npml
 import scipy.linalg
 import scipy.linalg as splg
-import simtools as sim
-import SchroedingerEqSolvers as ses
+from . import simtools as sim
+from . import SchroedingerEqSolvers as ses
 
 #######################################
 # class Hamiltonian
@@ -404,5 +404,5 @@ def SEsolver(solver):
     elif solver == "Cheby":
        return ses.Chebyshev_timeevo
     else:
-       print "**** warning: solver not selected!****"
+       print("**** warning: solver not selected!****")
        return None

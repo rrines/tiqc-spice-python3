@@ -24,13 +24,14 @@ try:
     import PyTIQC.evaluation.readdata as rd
 except:
     pass
-import densitymatrix
+from . import densitymatrix
 import scipy.io
 
 if id(np.dot) == id(np.core.multiarray.dot):
-    print " Not using blas/lapack!"
-    print " switching to blas/lapack!"
-    np.alterdot()
+    print(" Not using blas/lapack!")
+    print(" switching to blas/lapack!")
+    if hasattr(np,'alterdot'):
+        np.alterdot()
 
 # ------------------------------------
 
@@ -115,7 +116,7 @@ def iterfun(data,NumberOfIterations, path=None):
 #  AllOp=zeros((Ntable,2**NumberOfIons,2**NumberOfIons),dtype=complex)
     AllOp=[]
 #    toc2=time.time()
-#    print toc2-tic,'seconds for initialisation have elapsed'
+#    print(toc2-tic,'seconds for initialisation have elapsed')
     AllOp2 = np.zeros((Ntable,2**NumberOfIons,2**NumberOfIons),dtype=complex)
     AllOpTransposed = np.zeros((Ntable,2**NumberOfIons,2**NumberOfIons),dtype=complex)
     for k in xrange(Ntable):
@@ -128,7 +129,7 @@ def iterfun(data,NumberOfIterations, path=None):
         AllOpTransposed[k,:,:] = Op.transpose()
     # really starting with the iterations now
 #    toc3=time.time()
-#    print toc3-toc2,'seconds for operator initalisation'
+#    print(toc3-toc2,'seconds for operator initalisation')
     ROp_start=np.zeros((2**NumberOfIons,2**NumberOfIons),dtype=complex)
     list_probOp = np.zeros(Ntable)
     for i in xrange(NumberOfIterations):
@@ -145,14 +146,14 @@ def iterfun(data,NumberOfIterations, path=None):
             #     ROp += probs[k]/probOp * Op
         # tensordot results in a factor of 2 faster evaluation of
         # the w4 data compared to the old loop approach
-        # print (list_probOp2[0] -list_probOp[0])
+        # print((list_probOp2[0] -list_probOp[0]))
 
         ROp2 = np.tensordot(probs/list_probOp2,AllOp2,(0,0))
         rho=np.dot(np.dot(ROp2,rho),ROp2)
 #        rho=np.dot(np.dot(ROp,rho),ROp)
         rho/=rho.trace()
 #    toc=time.time()
-#    print time.time()-toc3,' seconds for iterations'
+#    print(time.time()-toc3,' seconds for iterations')
     return rho
 
 
@@ -186,7 +187,7 @@ if __name__ == "__main__":
     w2data=__iter_readdata('w2_global.dat')
     # rho_w2=iterfun(w2data,100)
     # rho_w2_ideal=array([[0,0,0,0],[0,0.5,0.5,0],[0,0.5,0.5,0],[0,0,0,0]])
-    # print 'overlap with w2: ', real(trace(dot(rho_w2_ideal,absolute(rho_w2))))
+    # print('overlap with w2: ', real(trace(dot(rho_w2_ideal,absolute(rho_w2)))))
 
     w4data=__iter_readdata('w4_global.dat')
     rho_w4=iterfun(w4data,100)
@@ -194,9 +195,9 @@ if __name__ == "__main__":
     rho_w4_ideal=np.outer(ideal_psi_w4,ideal_psi_w4)
     overlap = np.real(np.trace(np.dot(rho_w4_ideal,np.absolute(rho_w4))))
     if overlap > 0.75:
-        print 'passed'
+        print('passed')
 
-    #print 'overlap with w4: ', overlap
+    #print('overlap with w4: ', overlap)
 
     # w6data=__iter_readdata('w6_addressed.dat')
     # rho_w6=iterfun(w6data,100)

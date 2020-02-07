@@ -7,7 +7,7 @@
 #  url        http://wiki.havens.de
 #  rcs        $Id$
 
-import progressbar
-import quantum_tools
+from . import progressbar
+from . import quantum_tools
 
 # __init__.py ends here

@@ -8,12 +8,13 @@ import scipy.constants as constants
 import pylab as pl
 from mpl_toolkits.mplot3d import Axes3D
 
-import qmtools as qm
-import gates as U
+from . import qmtools as qm
+from . import gates as U
 
 import PyTIQC.core
 import copy
-import cPickle as pickle
+try:    import cPickle as pickle
+except: import pickle
 import time
 import os
 
@@ -403,9 +404,9 @@ class parameters:
               key = line[0]
               val = line[1].split('#')[0].strip()
               self.server_dict[key] = val
-      except Exception, e:
-          print "server_dict file parsing failed, setting server_dict to empty"
-          print e
+      except Exception as e:
+          print("server_dict file parsing failed, setting server_dict to empty")
+          print(e)
           self.server_dict = {}
 
 
@@ -512,7 +513,7 @@ class parameters:
                 try:
                     self.ppservers.append(self.server_dict[serv])
                 except KeyError:
-                    print "server", serv, "not found in server_dict, skipping"
+                    print("server", serv, "not found in server_dict, skipping")
               else:
                   self.ppcpus = 'autodetect'
           self.ppservers = tuple(self.ppservers)
@@ -520,7 +521,7 @@ class parameters:
               self.ppcpus = 0
 
       if len(self.ppservers)==0 and self.ppcpus==0:
-          print "no server defined, using local by default"
+          print("no server defined, using local by default")
           self.ppcpus = 'autodetect'
 
   def calcEta(self):
@@ -540,7 +541,7 @@ class parameters:
         if timefac * 2**i == int(timefac * 2**i):
             self.shortestMS = self.shortestMS * 2**i 
             break
-    print 'set shortestMS to', self.shortestMS
+    print('set shortestMS to', self.shortestMS)
     self.calcPulseParams()
 
   def calcPulseParams(self):
@@ -727,7 +728,7 @@ class Rblue(pulse):
     self.phase = self.phase - pi/2 # to match hartmut's
 
     if self.use_ideal:
-        print "warning: ideal U for Rblue not defined"
+        print("warning: ideal U for Rblue not defined")
 
 ########
 # Rac
@@ -1099,9 +1100,9 @@ class PulseSequence():
 
         shortform = ''
         for [ptype, count] in types_dict.items():
-            print count, ptype, "pulses"
+            print(count, ptype, "pulses")
             shortform += str(count) + ptype + ","
-        print shortform
+        print(shortform)
 
     def totalUnitary(self):
         ''' return the ideal unitary of the whole sequence '''
@@ -1225,8 +1226,8 @@ class database:
             try:
                 pulse.UtrAll = []
                 pulse.UtrAll.append(pulse.Utr)
-            except Exception, e:
-                print "Exception in database creation:", e
+            except Exception as e:
+                print("Exception in database creation:", e)
 
   def __iadd__(self, other): 
     self.YR = self.YR + other.YR
@@ -1307,7 +1308,7 @@ class database:
   def statesatpulse(self, displ=0):
     ''' save the states at the end of pulse times '''
     if self.pulseseq == None:
-        print "Error: self.pulseseq not defined"
+        print("Error: self.pulseseq not defined")
         return
 
     self.TP = np.zeros(len(self.pulseseq)+1)
@@ -1353,11 +1354,11 @@ class database:
     if printstates:
       for j in range(len(self.Pend)):
         if self.statesvalid:
-          print "|%s>: %1.3f, %2.3f + %1.3fi" \
-            %(qm.indexToState(j, self.hspace)[2], self.Pend[j], np.real(self.Yend[j]), np.imag(self.Yend[j]))
+          print("|%s>: %1.3f, %2.3f + %1.3fi" \
+            %(qm.indexToState(j, self.hspace)[2], self.Pend[j], np.real(self.Yend[j]), np.imag(self.Yend[j])))
         else:
-          print "|%s>: %1.3f" \
-            %(qm.indexToState(j, self.hspace)[2], self.Pend[j])
+          print("|%s>: %1.3f" \
+            %(qm.indexToState(j, self.hspace)[2], self.Pend[j]))
 
   def tracedpopulation(self, displ):
     """ trace over the motional qubit. plot D state pop for each ion. """
@@ -1401,15 +1402,15 @@ class database:
     # calculate abs populations and end states
     self.endpopulation(printstates=False)
     # print end results to terminal
-    print "Final population:"
+    print("Final population:")
     for j in range(len(self.Pend)):
       if self.Pend[j]>=0.001: # only print non-zero populations
         if self.statesvalid:
-          print "|%s>: %1.3f, %2.3f + %1.3fi" \
-            %(qm.indexToState(j, self.hspace)[2], self.Pend[j], np.real(self.Yend[j]), np.imag(self.Yend[j]))
+          print("|%s>: %1.3f, %2.3f + %1.3fi" \
+            %(qm.indexToState(j, self.hspace)[2], self.Pend[j], np.real(self.Yend[j]), np.imag(self.Yend[j])))
         else:
-          print "|%s>: %1.3f" \
-            %(qm.indexToState(j, self.hspace)[2], self.Pend[j])
+          print("|%s>: %1.3f" \
+            %(qm.indexToState(j, self.hspace)[2], self.Pend[j]))
 
     # make plot
     if not(displ): return
@@ -1558,21 +1559,21 @@ def DecayedPopulations_CCD(populations, params):
     for k in xrange(len(populations)):
       # for each population
       StateArray = qm.indexToState(k, fake_hspace)[1] # with D = 0
-#      print StateArray
-#      print type(StateArray)
+#      print(StateArray)
+#      print(type(StateArray))
       NumberOfExcitations = qm.indexToExcitations(k, fake_hspace)
       # directly tells us the max number of decays possible
       for l in np.arange(1,NumberOfExcitations+1):
           decayed_state_list = generate_decay_list([StateArray], decays = l)
           for decayed_state in decayed_state_list:
               ind = int(np.sum(decayed_state * multiplier))
-#              print ind
+#              print(ind)
               shift_pop = decay_prob**l * populations[k]
               populations_decayed[k] -= shift_pop
               populations_decayed[ind] += shift_pop
 
 
-#    print populations_decayed
+#    print(populations_decayed)
     return populations_decayed
 
 def generate_decay_list(statearray_list, decays=1):
@@ -1656,13 +1657,13 @@ if __name__ == "__main__":
 
   test_pop = np.array([1,0])
   b = DecayedExcitations_PMT(test_pop, parms)
-  print b
-  print 'should be: ', [0.9, 0.1]
+  print(b)
+  print('should be: ', [0.9, 0.1])
 
   # test_pop = np.array([1,0,0])
   # b = DecayedExcitations_PMT(test_pop, parms)
-  # print b
-  # print 'should be: ', [0.81, 0.18, 0.01]
+  # print(b)
+  # print('should be: ', [0.81, 0.18, 0.01])
 
   a = generate_decay_list([[0,0]])
   b = generate_decay_list(a)

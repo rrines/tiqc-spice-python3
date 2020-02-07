@@ -30,7 +30,7 @@ def main():
     saveKitaev = False
     doPPKitaev = True
 
-    print 'N = 21, a =',select_a
+    print('N = 21, a =',select_a)
     
     NumberOfIons = 6
     NumberOfPhonons = 0 if doIdeal else 7 
@@ -169,8 +169,8 @@ def main():
     if doRun:
         tic = time.time()
         result = Kit.simulateevolution(pulseseq, params, dec, doPP=doPPKitaev)
-        if not doIdeal: print "runtime: ", time.time()-tic, "sec"
-        print np.around(result,6)
+        if not doIdeal: print("runtime: ", time.time()-tic, "sec")
+        print(np.around(result,6))
     
     if saveKitaev:
         timestr = datetime.datetime.now().strftime('%Y%m%d-%H%M%S-%f')

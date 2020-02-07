@@ -4,7 +4,8 @@ import PyTIQC.core.qctools as qc
 import PyTIQC.core.gates as U
 import matplotlib.pyplot as pl
 import copy, pickle
-import pp
+try: import pp
+except: pass
 
 pi = np.pi
 
@@ -110,10 +111,10 @@ class Kitaev:
     def simulateevolution(self, pulseseq, params, dec, doPP=False):
         if not doPP:
             for ctl in range(2**(self.nOps-1)):
-                print ctl
+                print(ctl)
                 data = qc.simulateevolution(pulseseq[ctl], params, dec)
                 self.data_group.append(data)
-                print np.around(data.register,3)
+                print(np.around(data.register,3))
             result =  self.getQFT(self.data_group)
 
         else:

@@ -44,7 +44,7 @@ pulseseq = sim.PulseSequence( [ \
 tic = time.clock()
 data = qc.simulateevolution(pulseseq, params, dec)
 toc = time.clock()
-print "runtime: ", toc-tic, " sec"
+print("runtime: ", toc-tic, " sec")
 
 data.statesatpulse(2)
 data.endpopulation()

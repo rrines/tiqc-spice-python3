@@ -380,16 +380,16 @@ fidelities_dict = {
 
 def dispmtx(M, digits=5):
     ''' print the matrix rounded to (default) 5 decimal points. '''
-    print np.around(M, digits)
+    print(np.around(M, digits))
 
 def displaystates(psi, N=5, pop=False):
   ''' print the population of each state '''
   for i in range(len(psi)):
     if np.around(abs(psi[i]), 5) > 0:
         if pop:
-            print np.binary_repr(i).zfill(N), ": ", np.around(psi[i],3)
+            print(np.binary_repr(i).zfill(N), ": ", np.around(psi[i],3))
         else:
-            print np.binary_repr(i).zfill(N), ": ", np.around(abs(psi[i]**2),3), np.around(psi[i], 5)
+            print(np.binary_repr(i).zfill(N), ": ", np.around(abs(psi[i]**2),3), np.around(psi[i], 5))
 
 def displaytracedstates(psi, N=5, tracemask="11000", pop=False):
   ''' print the population of states, trace out certain qubits '''
@@ -409,7 +409,7 @@ def displaytracedstates(psi, N=5, tracemask="11000", pop=False):
 
   for i in range(len(y)):
     if np.around(abs(y[i]), 5) > 0:
-      print i, ': ', np.binary_repr(i).zfill(tracemask.count('0')), ": ", np.around(y[i],3)
+      print(i, ': ', np.binary_repr(i).zfill(tracemask.count('0')), ": ", np.around(y[i],3))
 
   return y
 

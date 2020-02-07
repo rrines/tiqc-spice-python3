@@ -6,12 +6,12 @@
 #  copyright  (c) Thomas Monz 2011
 #  url        http://wiki.havens.de
 
-import densitymatrixreconstruction
-import processtomography
-import readdata
-import MonteCarlo
-import InvestigatePulseSeq
-import InCircuitFidelity
-import EvaluateData
+from . import densitymatrixreconstruction
+from . import processtomography
+from . import readdata
+from . import MonteCarlo
+from . import InvestigatePulseSeq
+from . import InCircuitFidelity
+from . import EvaluateData
 
 # __init__.py ends here

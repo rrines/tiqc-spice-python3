@@ -100,8 +100,8 @@ if doIdeal:
 if doRun:
     tic = time.time()
     result = Kit.simulateevolution(pulseseq, params, dec, doPP=doPPKitaev)
-    if not doIdeal: print "runtime: ", time.time()-tic, "sec"
-    print np.around(result,3)
+    if not doIdeal: print("runtime: ", time.time()-tic, "sec")
+    print(np.around(result,3))
 
 if saveKitaev:
     timestr = datetime.datetime.now().strftime('%Y%m%d-%H%M%S-%f')

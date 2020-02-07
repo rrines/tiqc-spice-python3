@@ -7,7 +7,7 @@ import numpy.matlib as npml
 import time
 import scipy.optimize as optimize
 
-import proctom
+from . import proctom
 
 expm = lnlg.expm
 from math import pi
@@ -40,7 +40,7 @@ def findoptimizedrot(ideal_chi, my_chi, return_chi=False, use_random=True, verbo
     p1, covmat, infodict, mesg, ier = optimize.leastsq(errfunc, p0, full_output=True)
     fidelity = rotated_fidelity(p1, ideal_chi, my_chi)
     if verbose:
-        print "fid: " + str(fidelity)
+        print("fid: " + str(fidelity))
     if return_chi:
         rot_chi = rotated_chi(p1, my_chi)
         return p1, fidelity, rot_chi
@@ -54,7 +54,7 @@ def findoptimized_list(ideal_chi, my_list):
     fid_list = []
     for my_chi in my_list:
         fidelity = rotated_fidelity(p1, ideal_chi, my_chi)
-        print "fid: " + str(fidelity)
+        print("fid: " + str(fidelity))
         fid_list.append(fidelity)
     return p1, fid_list
 
@@ -129,7 +129,7 @@ def optimize_chi_dict(chi_dict, id_chi, mean_key='all', return_chi=False):
         if return_chi:
             chi_dict[my_key] = rotated_chi(rot_vec, my_chi)
         fid_dict[my_key] = my_fid
-        print str(my_key) + " fidelity: " +str(my_fid)
+        print(str(my_key) + " fidelity: " +str(my_fid))
     if return_chi:
         return fid_dict, chi_dict
     else:

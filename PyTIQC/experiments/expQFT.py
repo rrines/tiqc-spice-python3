@@ -78,10 +78,10 @@ if doRun:
     data = qc.simulateevolution(pulseseq, params, dec)
     data.RhoPNAll = np.array(data.RhoPNAll)
     toc = time.time()
-    print "runtime: ", toc-tic, "seconds"
+    print("runtime: ", toc-tic, "seconds")
   
 if params.savedata: 
-    print "saving run data to file"
+    print("saving run data to file")
     qc.saveRun(pulseseq, params, dec, data, params.savedataname)
 
 ### evaluate and plot fidelities
@@ -92,9 +92,9 @@ if calcfinal:
         evalobj.loadsimdata(data)
         evalobj.calculatePlotFidelities(displ,plottitle)#, grouperrors=100)
     else:
-        print "no data included, doRun must be set to True"
+        print("no data included, doRun must be set to True")
 
 ### include spontaneous decay in measurement
 if calc_spontdecay_during_measurement:
     pop_decayed = sim.DecayedPopulations_CCD(data.YRPN[-1], params)
-    print pop_dcayed
+    print(pop_dcayed)

@@ -6,6 +6,6 @@
 #  copyright  (c) Thomas Monz 2011
 #  url        http://wiki.havens.de
 
-import IterML
+from . import IterML
 
 # __init__.py ends here

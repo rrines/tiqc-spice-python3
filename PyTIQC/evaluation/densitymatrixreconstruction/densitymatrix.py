@@ -100,8 +100,8 @@ class DensityMatrixObject:
     for index in xrange(rho_size/2.0-1):
       sum_array[index] = self.exprho[index+1,index+1] + \
           self.exprho[rho_size-index-1][rho_size-index-1]
-    print "max unwanted: " +str(np.max(sum_array))
-    print "off_diag: " + str(off_diag)
+    print("max unwanted: " +str(np.max(sum_array)))
+    print("off_diag: " + str(off_diag))
 
 
 
@@ -121,11 +121,11 @@ if __name__ == "__main__":
 
   tst=DensityMatrixObject(exrho)
   tst.fid(idrho)
-  print tst.jozsafid()
+  print(tst.jozsafid())
 
   tst=DensityMatrixObject(idrho)
   tst.fid(exrho)
-  print tst.jozsafid()
+  print(tst.jozsafid())
 
 
   tst.trdistance()

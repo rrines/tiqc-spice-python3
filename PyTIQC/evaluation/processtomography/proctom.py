@@ -102,7 +102,7 @@ def proctomo(data, NumberOfIterations = 100, use_bell_basis=False):
     del RhoIn, Obs, tmp
 
 #            TransposedRhoTObs[m*NObs+n,:,:] = transpose(RhoTObs[m*NObs+n,:,:])
-#  print time.time()-tic,'seconds'
+#  print(time.time()-tic,'seconds')
 
     # reserving some more memory space
     QOps = np.zeros((2**NumberOfIons,2**NumberOfIons,(2**NumberOfIons)**2))
@@ -143,7 +143,7 @@ def proctomo(data, NumberOfIterations = 100, use_bell_basis=False):
     Kstart = np.zeros((4**NumberOfIons,4**NumberOfIons))
     # --------------------------
 
-    #print RhoTObs.imag.max()
+    #print(RhoTObs.imag.max())
 
     ObsValCalc = np.zeros(NRho*NObs)
     #S = np.zeros(((2**NumberOfIons)**2,(2**NumberOfIons)**2))
@@ -170,7 +170,7 @@ def proctomo(data, NumberOfIterations = 100, use_bell_basis=False):
         S = np.dot(Laminv,np.dot(K,np.dot(S0,np.dot(K,Laminv))))
         S0 = S
 
-#    print time.time()-tic,'seconds'
+#    print(time.time()-tic,'seconds')
     # calculate corresponding chi matrix
     # all the info is in the S matrix
 
@@ -243,7 +243,7 @@ def LoadProctomData(data):
     psistart = np.zeros(2**NumberOfIons)
     psistart[2**NumberOfIons-1] = 1
 
-#  print (theta_list,phi_list)
+#  print((theta_list,phi_list))
 #  return (theta_list,phi_list)
     for k in xrange(NRho):
         Op_tmp = np.zeros((NumberOfIons,2,2),dtype=complex)
@@ -257,7 +257,7 @@ def LoadProctomData(data):
 
         psi_in = np.dot(Op,psistart)
         RhoIn[k,:,:] = np.outer(psi_in,np.conjugate(psi_in))
-    #print RhoIn
+    #print(RhoIn)
 
     # new lets start to work on teh projectors
     ez_list = []
@@ -300,13 +300,13 @@ def LoadProctomData(data):
 #         Op = npml.kron(Op_tmp[l+1,:,:],Op)
                 Op = npml.kron(Op_tmp[l+1,:,:],Op)
 
-#        print Op
+#        print(Op)
 #        sqrtm(Op)
 
         for m in xrange(2**NumberOfIons):
             psi = np.dot(Op,np.eye(2**NumberOfIons)[:,m])
             Obs[k*(2**NumberOfIons)+m,:,:] = np.outer(psi,psi.conjugate())
-#    print Obs
+#    print(Obs)
 
 
     # calculate obsval
@@ -360,14 +360,14 @@ def proc_channel_operators(NumberOfIons):
     for k in xrange(4**NumberOfIons):
         tmp = 1
         for l in xrange(NumberOfIons):
-            # print np.mod(int(1.*k/4**l),4)
+            # print(np.mod(int(1.*k/4**l),4))
             tmp = npml.kron(tmp,Paulis[np.mod(int(1.*k/4**l),4)])
         A[:,:,k] = tmp
 
     return A
 
 #A=proc_channel_operators(2)
-# print A
+# print(A)
 
 def proc_channel_output(chi, input_rho):
 
@@ -444,8 +444,8 @@ def mean_process_fidelity(chi_exp, chi_id, NumberOfSampleStates = 100, type_rho_
 
         fid_list.append(fid)
 
-    print 'Process fidelity: %0.4g' % (np.sum(chi_exp* chi_id.transpose()))
-    print 'Mean fidelity ('+type_rho_distribution+'): %0.4g +- %0.4g' % (np.mean(np.array(fid_list)), np.std(np.array(fid_list)))
+    print('Process fidelity: %0.4g' % (np.sum(chi_exp* chi_id.transpose())))
+    print('Mean fidelity ('+type_rho_distribution+'): %0.4g +- %0.4g' % (np.mean(np.array(fid_list)), np.std(np.array(fid_list))))
 
 
 # ----------------------------------------
@@ -462,7 +462,7 @@ def demo():
 #  chi3id = proctomo(dat_3ions_id, NumberOfIterations = 50)
 
     if chi2exp[0,0] > 0.95:
-        print 'passed'
+        print('passed')
 
     #chi1id = np.zeros((4**1,4**1))
     #chi1id[0,0] = 1
@@ -492,12 +492,12 @@ def demo():
     rho1 = np.array([[0.5, 0.5],[.5, .5]])
     rhoo = proc_channel_output(chi1exp, rho1)
 
-    print rhoo
+    print(rhoo)
 
     a = getopbase()
     A = baseappend(a,a)
 
-    print np.all(npml.kron(a[0],a[1]) == A[1])
+    print(np.all(npml.kron(a[0],a[1]) == A[1]))
 
 
 

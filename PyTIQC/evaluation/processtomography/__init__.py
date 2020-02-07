@@ -6,8 +6,8 @@
 #  copyright  (c) Thomas Monz 2011
 #  url        http://wiki.havens.de
 
-import proctom
-import optimizechi
-import quantumprocess
+from . import proctom
+from . import optimizechi
+from . import quantumprocess
 
 # __init__.py ends here

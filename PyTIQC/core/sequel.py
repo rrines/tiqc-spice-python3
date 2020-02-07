@@ -33,11 +33,11 @@ def getsim(simid=None):
             break
     db.close()
     dbx.close()
-    print k
+    print(k)
     return {'name':name, 'param':param, 'pp':pp, 'extra':extra}
     #records = sqlmod.Simulation.objects.all()
     #for rec in records:
-    #    print rec
+    #    print(rec)
 
 
 def insertSimToDB(pulseseq, params, dec):
@@ -58,8 +58,8 @@ def insertSimToDB(pulseseq, params, dec):
         % (dec.doSQLname, entry_ps, entry_params, entry_hspace, entry_dec)
     try:
         db.execute(sql)
-    except Exception, e:
-        print "ERROR in sql insertSimToDB:", e
+    except Exception as e:
+        print("ERROR in sql insertSimToDB:", e)
 
     db.close()
     dbx.close()
@@ -81,14 +81,14 @@ def insertJobToDB(data):
         % (entry_T, entry_Y, entry_hspace)
     try:
         db.execute(sql)
-    except Exception, e:
-        print "ERROR in sql insertJobToDB:", e
+    except Exception as e:
+        print("ERROR in sql insertJobToDB:", e)
 
     db.close()
     dbx.close()    
     
 
 if __name__=="__main__":
-    print "getting a simulation specification"
+    print("getting a simulation specification")
     getsim()
 

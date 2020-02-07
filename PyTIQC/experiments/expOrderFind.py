@@ -186,7 +186,7 @@ if doAll:
                     for pulse in ps:
                         pulse.use_ideal = True
 
-        print "initial state", y0, "| expected order", select_order
+        print("initial state", y0, "| expected order", select_order)
         params.initial_state("quantum", qstate = y0)
 
         tic = time.time()
@@ -195,20 +195,20 @@ if doAll:
         else:
             data = qc.simulateevolution(pulseseq, params, dec)
             result = U.displaytracedstates(data.YRPN[-1], pop=True)
-        if not doIdeal: print "runtime: ", time.time()-tic, "sec"
+        if not doIdeal: print("runtime: ", time.time()-tic, "sec")
         
 
 else:
     tic = time.time()
     if doKitaev:
         result = Kit.simulateevolution(pulseseq, params, dec)
-        print np.around(result, 3)
+        print(np.around(result, 3))
 
     else:
         data = qc.simulateevolution(pulseseq, params, dec)
         result = U.displaytracedstates(data.YRPN[-1], pop=True)
-        print np.around(result, 3)
-    if not doIdeal: print "runtime: ", time.time()-tic, "sec"
+        print(np.around(result, 3))
+    if not doIdeal: print("runtime: ", time.time()-tic, "sec")
 
 if saveKitaev:
     qc.saveRun(pulseseq, params, dec, Kit.data_group, 'OF'+str(select_order)+'-werr.shlv')

@@ -7,11 +7,11 @@
 #  url        http://wiki.havens.de
 #  rcs        $Id$
 
-import qctools
-import simtools
-import qmtools
-import SchroedingerEqSolvers
-import gates
-import sequel
+from . import qctools
+from . import simtools
+from . import qmtools
+from . import SchroedingerEqSolvers
+from . import gates
+from . import sequel
 
 # __init__.py ends here

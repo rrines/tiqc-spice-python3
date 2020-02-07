@@ -9,8 +9,8 @@ import os, sys, shelve, time, copy
 
 import PyTIQC.core.gates as U
 import PyTIQC.core.simtools as sim
-import readdata as rd
-import densitymatrixreconstruction as dmr
+from . import readdata as rd
+from . import densitymatrixreconstruction as dmr
 
 pi = np.pi
 
@@ -56,7 +56,7 @@ class EvaluateData:
                 dataobj = dataobj_list.pop()
                 for item in dataobj_list:
                     dataobj += item
-                print dataobj.parameters['cycles']
+                print(dataobj.parameters['cycles'])
             else:
                 dataobj = rd.ReadData(timetags[0])
 
@@ -72,10 +72,10 @@ class EvaluateData:
                 if len(data_list) == np.shape(self.rho)[0]-1:
                     self.rhoexp.append(self.rho[0])
                 elif len(data_list) != np.shape(self.rho)[0]:
-                    print "length of data_list and ideal results don't match. Adding initial density matrix."
+                    print("length of data_list and ideal results don't match. Adding initial density matrix.")
                     self.rhoexp.append(self.rho[0])
             else:
-                print "ideal densmat not loaded - check len(rhoexp)."
+                print("ideal densmat not loaded - check len(rhoexp).")
 
             for dat in data_list: #range(len(expfiles)):
                 rhoexp1 = dmr.IterML.iterfun(dat, 100)
@@ -87,7 +87,7 @@ class EvaluateData:
             self.rhoexp = np.array(self.rhoexp)
             if print_fidelities:
                 for i in range(np.min([len(self.rhoexp), len(self.rho)])):
-                    print i, ": ", U.jozsafid(self.rho[i], self.rhoexp[i])
+                    print(i, ": ", U.jozsafid(self.rho[i], self.rhoexp[i]))
 
         self.exploaded = True
 
@@ -105,7 +105,7 @@ class EvaluateData:
         self.simloaded = True
         if print_fidelities:
             for i in range(np.min([len(self.rhosim), len(self.rho)])):
-                print i, ": ", U.jozsafid(self.rho[i], self.rhosim[i])
+                print(i, ": ", U.jozsafid(self.rho[i], self.rhosim[i]))
 
     def loadexpdataNPY(self, files_dict):
         ''' load experiment data from NPY file '''
@@ -113,18 +113,18 @@ class EvaluateData:
             try:
                 self.rhoexp = np.load(files_dict['expdatafile'])
                 self.exploaded=True
-            except Exception, e:
-                print "experimental data not loaded:", files_dict['expdatafile']
-                print e    
+            except Exception as e:
+                print("experimental data not loaded:", files_dict['expdatafile'])
+                print(e    )
         if 'expdataerrfile' in files_dict.keys(): 
             try:
                 d = shelve.open(files_dict['expdataerrfile'])
                 self.experr_dict = d['experr_dict']
                 d.close()
                 self.experrloaded=True
-            except Exception, e:
-                print "experimental error data not loaded:", files_dict['expdataerrfile']
-                print e  
+            except Exception as e:
+                print("experimental error data not loaded:", files_dict['expdataerrfile'])
+                print(e  )
 
 
     def loadDataNPY(self, files_dict):
@@ -134,9 +134,9 @@ class EvaluateData:
         if 'idealdatafile' in files_dict.keys():
             try:
                 self.rho = np.load(files_dict['idealdatafile'])
-            except Exception, e:
-                print "ideal densmat not loaded:", files_dict['idealdatafile']
-                print e 
+            except Exception as e:
+                print("ideal densmat not loaded:", files_dict['idealdatafile'])
+                print(e )
         if 'simdatafile' in files_dict.keys():
             try:
                 d = shelve.open(files_dict['simdatafile'])
@@ -150,9 +150,9 @@ class EvaluateData:
                 self.rhosim = self.data.RhoPN
                 d.close()
                 self.simloaded = True
-            except Exception, e:
-                print "simulation data not loaded:", files_dict['simdatafile']
-                print e       
+            except Exception as e:
+                print("simulation data not loaded:", files_dict['simdatafile'])
+                print(e       )
 
     def getPopFromRho(self):
         ''' extract populations from density matrix '''
@@ -160,22 +160,22 @@ class EvaluateData:
             self.YR = np.zeros((np.shape(self.rho)[0], np.shape(self.rho)[1]))
             for i in range(np.shape(self.rho)[0]):
                 self.YR[i] = np.diag(self.rho[i])
-        except Exception, e:
-            print "self.YR not defined: ", e
+        except Exception as e:
+            print("self.YR not defined: ", e)
 
         try:
             self.YRexp = np.zeros((np.shape(self.rhoexp)[0], np.shape(self.rhoexp)[1]))
             for i in range(np.shape(self.rhoexp)[0]):
                 self.YRexp[i] = np.diag(self.rhoexp[i])
-        except Exception, e:
-            print "self.YRexp not defined: ", e
+        except Exception as e:
+            print("self.YRexp not defined: ", e)
             
         try:
             self.YRsim = np.zeros((np.shape(self.rhosim)[0], np.shape(self.rhosim)[1]))
             for i in range(np.shape(self.rhosim)[0]):
                 self.YRsim[i] = np.diag(self.rhosim[i])
-        except Exception, e:
-            print "self.YRsim not defined: ", e
+        except Exception as e:
+            print("self.YRsim not defined: ", e)
 
 
 
@@ -183,7 +183,7 @@ class EvaluateData:
                                  grouperrors=False):
         ''' calculate fidelities from a simulation data set including error bars '''
         if not self.simloaded:
-            print "ERROR: must load simulation data first"
+            print("ERROR: must load simulation data first")
             return 
 
         if one:
@@ -201,7 +201,7 @@ class EvaluateData:
         fidmean = np.mean(fid_end_list)
         fiderr = np.std(fid_end_list)
         if self.verbose:
-            print fidtype, np.around(fidmean,3), "+/-", np.around(fiderr,3)
+            print(fidtype, np.around(fidmean,3), "+/-", np.around(fiderr,3))
 
         # fidelity vs pulse number
         fid_list = []
@@ -248,12 +248,12 @@ class EvaluateData:
             np.hstack([0*fid1, self.fid_dict[fidtype]['25qtl'] ])
 
         #if self.verbose:
-        #    print fidtype,  "%0.3f + %0.3f - %0.3f" % ( fid_med[-1], fid_75qtl[-1]-fid_med[-1], fid_med[-1]-fid_25qtl[-1] )
+        #    print(fidtype,  "%0.3f + %0.3f - %0.3f" % ( fid_med[-1], fid_75qtl[-1]-fid_med[-1], fid_med[-1]-fid_25qtl[-1] ))
 
     def calculate_exp_fidelities(self, fidelity, fidtype, startat=0):
         ''' calculate fidelities from an experimental data set '''
         if not self.exploaded:
-            print "ERROR: must load experimental data first"
+            print("ERROR: must load experimental data first")
             return 
 
         rho = self.rho
@@ -348,7 +348,7 @@ class EvaluateData:
 
         if single:
             if fidelity == None or fidtype == None:
-                print "Error: must set fidelity and fidtype for single=True"
+                print("Error: must set fidelity and fidtype for single=True")
                 return
             ax = fig.add_subplot(111)
             makeSubplot(ax, fidelity, fidtype, title=False)
@@ -433,7 +433,7 @@ def loadevaldata(filename, YRideal, Nqubits, NumIterations=100):
     experr = np.zeros(np.shape(data)[0])
     for k in range(len(data)):
         fid = np.sum(abs(YRideal[k,:] - data[k,:]) )
-        #print ' at pulse', k+1, ' : ', str(np.around(fid,3))
+        #print(' at pulse', k+1, ' : ', str(np.around(fid,3)))
         experr[k] = fid
 
     return data, experr
