@@ -25,17 +25,17 @@ plot_suites = unittest.TestSuite((
   ))
 
 # Run all sub-test modules in this package by importing them
-import test_carrier
+from . import test_carrier
 test_carrier.TestUserFunction.previous_tests = all_suites.countTestCases()
-all_suites.addTest(test_carrier.all_suites)
+# all_suites.addTest(test_carrier.all_suites)
 plot_suites.addTest(test_carrier.plot_suites)
 
-import test_evaluations
+from . import test_evaluations
 test_evaluations.TestUserFunction.previous_tests = all_suites.countTestCases()
-all_suites.addTest(test_evaluations.all_suites)
+# all_suites.addTest(test_evaluations.all_suites)
 plot_suites.addTest(test_evaluations.plot_suites)
 
-import test_decoherence
+from . import test_decoherence
 test_decoherence.TestUserFunction.previous_tests = all_suites.countTestCases()
 all_suites.addTest(test_decoherence.all_suites)
 plot_suites.addTest(test_decoherence.plot_suites)

@@ -143,14 +143,14 @@ def init_operator_dict(nr_of_ions, smallest_ms=1/4.):
     op_dict[1] = XOp
     op_dict[2] = YOp
     op_dict[3] = MSOp(smallest_ms=smallest_ms)
-    for index in xrange(nr_of_ions):
+    for index in range(nr_of_ions):
         op_dict[4+index] = ZOp(index+1)
     return op_dict
 
 def generate_sequence(hamil_list, ampl_list, nr_of_ions, smallest_ms):
     op_dict = init_operator_dict(nr_of_ions, smallest_ms)
     pulse_list = []
-    for index in xrange(len(hamil_list)):
+    for index in range(len(hamil_list)):
         my_hamil = hamil_list[index]
         my_ampl = ampl_list[index]
         my_pulse = op_dict[my_hamil](my_ampl)
@@ -179,8 +179,8 @@ def Fredkin():
     hamil_list = get_list_from_matlab_string(hamil_str)
     ampl_list = get_list_from_matlab_string(ampl_str, operation=float)
     my_string = generate_sequence(hamil_list, ampl_list, nr_of_ions, smallest_ms)
-    print "\n%%%%%%%% Fredkin %%%%%%%%%%%%%%%"
-    print my_string
+    print("\n%%%%%%%% Fredkin %%%%%%%%%%%%%%%")
+    print(my_string)
 
 def Toffoli():
     nr_of_ions = 3
@@ -190,8 +190,8 @@ def Toffoli():
     hamil_list = get_list_from_matlab_string(hamil_str)
     ampl_list = get_list_from_matlab_string(ampl_str, operation=float)
     my_string = generate_sequence(hamil_list, ampl_list, nr_of_ions, smallest_ms)
-    print "\n%%%%%%%% Toffoli %%%%%%%%%%%%%%%"
-    print my_string
+    print("\n%%%%%%%% Toffoli %%%%%%%%%%%%%%%")
+    print(my_string)
 
 def Cnot13():
     nr_of_ions = 3
@@ -201,8 +201,8 @@ def Cnot13():
     hamil_list = get_list_from_matlab_string(hamil_str)
     ampl_list = get_list_from_matlab_string(ampl_str, operation=float)
     my_string = generate_sequence(hamil_list, ampl_list, nr_of_ions, smallest_ms)
-    print "\n%%%%%%%% CNOT(1,3) %%%%%%%%%%%%%%%"
-    print my_string
+    print("\n%%%%%%%% CNOT(1,3) %%%%%%%%%%%%%%%")
+    print(my_string)
 
 
 def Order3():
@@ -213,8 +213,8 @@ def Order3():
     hamil_list = get_list_from_matlab_string(hamil_str)
     ampl_list = get_list_from_matlab_string(ampl_str, operation=float)
     my_string = generate_sequence(hamil_list, ampl_list, nr_of_ions, smallest_ms)
-    print "\n%%%%%%%% Order3 %%%%%%%%%%%%%%%"
-    print my_string
+    print("\n%%%%%%%% Order3 %%%%%%%%%%%%%%%")
+    print(my_string)
 
 
 def Order4():
@@ -225,8 +225,8 @@ def Order4():
     hamil_list = get_list_from_matlab_string(hamil_str)
     ampl_list = get_list_from_matlab_string(ampl_str, operation=float)
     my_string = generate_sequence(hamil_list, ampl_list, nr_of_ions, smallest_ms)
-    print "\n%%%%%%%% Order4 %%%%%%%%%%%%%%%"
-    print my_string
+    print("\n%%%%%%%% Order4 %%%%%%%%%%%%%%%")
+    print(my_string)
 
 def Order32():
     nr_of_ions = 3
@@ -236,8 +236,8 @@ def Order32():
     hamil_list = get_list_from_matlab_string(hamil_str)
     ampl_list = get_list_from_matlab_string(ampl_str, operation=float)
     my_string = generate_sequence(hamil_list, ampl_list, nr_of_ions, smallest_ms)
-    print "\n%%%%%%%% Order3^2 %%%%%%%%%%%%%%%"
-    print my_string
+    print("\n%%%%%%%% Order3^2 %%%%%%%%%%%%%%%")
+    print(my_string)
 
 def Shora7a():
     nr_of_ions = 5
@@ -247,8 +247,8 @@ def Shora7a():
     hamil_list = get_list_from_matlab_string(hamil_str)
     ampl_list = get_list_from_matlab_string(ampl_str, operation=float)
     my_string = generate_sequence(hamil_list, ampl_list, nr_of_ions, smallest_ms)
-    print "\n%%%%%%%% Shor a=7(a) %%%%%%%%%%%%%%%"
-    print my_string
+    print("\n%%%%%%%% Shor a=7(a) %%%%%%%%%%%%%%%")
+    print(my_string)
 
 def Shora11():
     nr_of_ions = 5
@@ -258,8 +258,8 @@ def Shora11():
     hamil_list = get_list_from_matlab_string(hamil_str)
     ampl_list = get_list_from_matlab_string(ampl_str, operation=float)
     my_string = generate_sequence(hamil_list, ampl_list, nr_of_ions, smallest_ms)
-    print "\n%%%%%%%% Shor a=11 %%%%%%%%%%%%%%%"
-    print my_string
+    print("\n%%%%%%%% Shor a=11 %%%%%%%%%%%%%%%")
+    print(my_string)
  
 if __name__ == '__main__':
 #    Fredkin()

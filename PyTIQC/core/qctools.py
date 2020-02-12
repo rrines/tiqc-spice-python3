@@ -4,16 +4,14 @@ import numpy
 import numpy as np
 import scipy.linalg
 import scipy.linalg as splg
-import PyTIQC.tools.progressbar
-import PyTIQC.tools.progressbar as progbar
-import PyTIQC.tools.progressbar as progressbar
+from PyTIQC.tools import progressbar
+from PyTIQC.tools import progressbar as progbar
+from PyTIQC.tools import pp
 
 from . import simtools
 from . import qmtools
 from . import qctools
 from . import sequel
-try: import pp
-except: pass
 
 import copy, logging, shelve
 
@@ -285,8 +283,8 @@ def simulationCore(pulseseq, params, dec):
     splg = scipy.linalg
     pi = np.pi
 
-    qmtools = PyTIQC.core.qmtools
-    simtools = PyTIQC.core.simtools
+    # qmtools = PyTIQC.core.qmtools
+    # simtools = PyTIQC.core.simtools
 
     # make list of times and state vector
     totaltime = pulseseq.totaltime
@@ -317,7 +315,7 @@ def simulationCore(pulseseq, params, dec):
         noise_dict = ns.Noise(params, dec)
         noise_total = [[noise_dict['none'][0]], [noise_dict['none'][1]], [noise_dict['none'][2]]]
 
-        for key, [mult, add, uni] in noise_dict.iteritems():
+        for key, [mult, add, uni] in noise_dict.items():
             if (dec.dict['all'] or dec.dict[key]): # and not pulse.use_ideal:
                 noise_total[0].append(mult)
                 noise_total[1].append(add)
@@ -424,7 +422,9 @@ def simulationCore(pulseseq, params, dec):
                 and tcur <= pulse.endtime \
                 and abs(pulse.starttime + pulse.duration - pulse.endtime) < 0.001 \
                 and pulse.duration >= 0, \
-                "Pulse timing not consistent; missing copy.deepcopy?"
+                "Pulse timing not consistent; missing copy.deepcopy? " \
+                f"{pulse} ({pulse.starttime}<={tcur}<={pulse.endtime}) (dur={pulse.duration}) " \
+                f"{abs(pulse.starttime + pulse.duration - pulse.endtime)}"
 
             tlen = min([pulseseq.seqqc[p0].endtime - tcur, T[t0+1]-tcur])
 
@@ -435,7 +435,7 @@ def simulationCore(pulseseq, params, dec):
                 lqc = noise_mult(tcur) * lqc + np.diag(noise_add(tcur))
 
 
-            Ugate = splg.expm2(-1j * tlen * HT)
+            Ugate = splg.expm(-1j * tlen * HT)
             Ulqc1 = np.diag(np.exp(-1j * tcur * lqc))
             Ulqc2 = np.diag(np.exp(-1j * (-tlen-tcur) * lqc))
 

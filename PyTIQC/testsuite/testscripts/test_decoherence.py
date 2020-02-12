@@ -18,7 +18,7 @@ import PyTIQC.evaluation.processtomography.proctom as proctom
 pi = np.pi
 
 from scipy.optimize import leastsq
-import PyTIQC.tools.progressbar as progbar
+from PyTIQC.tools import progressbar as progbar
 
 class TestUserFunction(unittest.TestCase):
 
@@ -27,11 +27,11 @@ class TestUserFunction(unittest.TestCase):
     figNum = 0
 
     def getFigNum(self):
-	figNum = 0
+        figNum = 0
         if(self.plot):
             TestUserFunction.figNum += 1
-	    figNum = TestUserFunction.figNum + TestUserFunction.previous_tests
-            print "(figure",figNum,")"
+            figNum = TestUserFunction.figNum + TestUserFunction.previous_tests
+            print("(figure",figNum,")")
         return figNum
 
     def test_state_initialisation(self):
@@ -39,26 +39,26 @@ class TestUserFunction(unittest.TestCase):
         do Rabi with initerror and check for correct
         reduction in contrast
         """
-        assert(test_state_initialisation_detailed(self.getFigNum()))
-        #assert(True)
+        assert test_state_initialisation_detailed(self.getFigNum())
+        #assert True
 
     def test_dephasing(self):
         """
         do Ramsey and look for decay
         """
-        assert(test_dephasing_detailed(self.getFigNum()))
+        assert test_dephasing_detailed(self.getFigNum())
 
     def test_spontdecay(self):
         """
         wait for a Delay pulse and watch the D state decay to S
         """
-        assert(test_spontdecay_detailed(self.getFigNum()))
+        assert test_spontdecay_detailed(self.getFigNum())
 
     def test_heating(self):
         """
         wait for a Delay pulse and watch the phonon number increase
         """
-        assert(test_heating_detailed(self.getFigNum()))
+        assert test_heating_detailed(self.getFigNum())
 
 
 # Test class with plotting enabled
@@ -97,7 +97,9 @@ def test_state_initialisation_detailed(figNum):
 
     dec = sim.decoherence(params)
 
-    dec.doRandNtimes = 1000
+    dec.doPP = False
+    dec.progbar = False
+    dec.doRandNtimes = 10
     dec.dict['initerr'] = True
 
     params.y0[qc.stateToIndex(NumberOfIons*'S'+',0', hspace)] = 1
@@ -125,7 +127,7 @@ def test_state_initialisation_detailed(figNum):
     errfun = lambda p, x, y: y-fitfun(p,x)
 
     par, covmat, infodict, mesg, ier = leastsq(errfun, startparams, args=(x,y), full_output = True)
-#    print par
+#    print(par)
 
     # even for the 1000 realisations, allow for a 3% error
     epsilon = 0.03
@@ -186,7 +188,7 @@ def test_dephasing_detailed(figNum):
     par, covmat, infodict, mesg, ier = leastsq(errfun, p0, args=(x,y), full_output = True)
     
     epsilon = 100 # with 20 iterations allow 100us offset in coherence time
-    #print par
+    #print(par)
     return data1
     #return np.abs(par[-1] - params.coherenceTime) < epsilon
 
@@ -229,7 +231,7 @@ def test_spontdecay_detailed(figNum):
     
     epsilon = 50 # with 100 iterations allow 50us offset in decay time
 
-#    print np.abs(par[-1] - params.lifetime)
+#    print(np.abs(par[-1] - params.lifetime))
     return np.abs(par[-1] - params.lifetime) < epsilon
 
 ###########################################
@@ -272,9 +274,9 @@ def test_heating_detailed(figNum):
 
 ###################################################
 if __name__ == "__main__":
-    #print test_state_initialisation_detailed()
+    #print(test_state_initialisation_detailed())
     #data1= test_dephasing_detailed(0)
-    #print test_spontdecay_detailed(1)
+    #print(test_spontdecay_detailed(1))
     data = test_heating_detailed(0)
 
 # test_evaluations.py ends here

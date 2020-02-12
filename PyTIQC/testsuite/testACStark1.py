@@ -54,5 +54,5 @@ def data_optimize(inputparam, params, dec):
 
     return data.YtrI[-1]
     
-print spop.fmin(data_optimize, 0.09, args=(params, dec), full_output=True)
-print "for params.omac=", params.omac
+print(spop.fmin(data_optimize, 0.09, args=(params, dec), full_output=True))
+print("for params.omac=", params.omac)

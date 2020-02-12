@@ -11,10 +11,10 @@ import scipy.linalg as splg
 import os, sys, shelve, time, copy, shelve
 
 from . import readdata as rd
-import PyTIQC.tools.progressbar as progressbar
-import PyTIQC.core.gates as U
-import PyTIQC.core.simtools as sim
-import PyTIQC.core.qctools as qc
+from PyTIQC.tools import progressbar
+from PyTIQC.core  import gates as U
+from PyTIQC.core  import simtools as sim
+from PyTIQC.core  import qctools as qc
 from . import InvestigatePulseSeq as ips
 from . import EvaluateData as evd
 from .processtomography import quantumprocess as qproc
@@ -124,7 +124,7 @@ class InCircuitFidelity:
         
         if printit:
             print("Available gates in sequence and their positions:")
-            for (key, val) in self.gates_dict.iteritems():
+            for (key, val) in self.gates_dict.items():
                 print("  ", self._printGatetype(key), ":", val)
 
     def _printGatetype(self, gatetype):

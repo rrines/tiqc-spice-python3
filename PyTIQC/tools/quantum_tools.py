@@ -36,12 +36,12 @@ def PartialTrace(psirho, dim_list, trace_elements):
         perm = n-1-np.array(keep[::-1].tolist()+trace_elements.tolist())
         print(perm)
         print(rdim)
-        x = np.reshape(np.transpose(np.reshape(psirho, rdim,'FORTRAN'),perm), [dimkeep,dimtrace], 'FORTRAN')
+        x = np.reshape(np.transpose(np.reshape(psirho, rdim,order='F'),perm), [dimkeep,dimtrace], order='F')
         rho_traced = np.dot(x,x.conjugate().transpose())
 
     else:
         perm = n-1-np.array(keep[::-1].tolist()+(keep[::-1]-n).tolist()+trace_elements.tolist()+(trace_elements-n).tolist())
-        x = np.reshape(np.transpose(np.reshape(psirho, rdim.tolist()+rdim.tolist(),'FORTRAN'), perm), [dimkeep,dimkeep,dimtrace**2], 'FORTRAN')
+        x = np.reshape(np.transpose(np.reshape(psirho, rdim.tolist()+rdim.tolist(),order='F'), perm), [dimkeep,dimkeep,dimtrace**2], order='F')
         x = np.sum(x[:,:,np.arange(1,dimtrace**2+1,dimtrace+1)-1],axis = 2)
         rho_traced = x
 
@@ -66,7 +66,7 @@ def sqrtm_dm(x):
     # eigenvalues. so i cut off at 10**-12 and set them
     # to zero. that way the sqrt on real number doesn't
     # produce nans
-    for k in xrange(len(d)):
+    for k in range(len(d)):
         if d[k] < 10**-12:
             d[k] = 0
 

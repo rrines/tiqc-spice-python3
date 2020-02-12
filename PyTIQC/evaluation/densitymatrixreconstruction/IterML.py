@@ -64,32 +64,32 @@ def iterfun(data,NumberOfIterations, path=None):
     pulsecode=data[:,0]
     NoExp=len(pulsecode)
     # pulses = double(dec2base(pulsecode,3,NoI))-double('0');
-    pulses=np.zeros((3**NumberOfIons,NumberOfIons))
+    pulses=np.zeros((3**NumberOfIons,NumberOfIons),dtype=np.int)
 #  pulses.shape=
-    for i in xrange(3**NumberOfIons):
+    for i in range(3**NumberOfIons):
         pulses[i,:]=np.array(__dec2base(i,3,NumberOfIons))
     #print(pulses)
     # pulsetable = reshape(kron(ones(1,2^NoI),pulses)',NoI,NoExp*2^NoI)';
     # first part kron(ones(1,2^NoI),pulses)'  =
     #  = mtlb.transpose(mtlb.kron(ones(2**NumberOfIons),pulses))
-    # reshape = reshape(<whatever>,(NumberOfIons,3**NumberOfIons*2**NumberOfIons),'FORTRAN')
-    a=npml.kron(np.ones(2**NumberOfIons),pulses).transpose()
-    pulsetable = np.reshape(a,(NumberOfIons,3**NumberOfIons*2**NumberOfIons),'FORTRAN').transpose()
+    # reshape = reshape(<whatever>,(NumberOfIons,3**NumberOfIons*2**NumberOfIons),order='F')
+    a=npml.kron(np.ones(2**NumberOfIons,dtype=np.int),pulses).transpose()
+    pulsetable = np.reshape(a,(NumberOfIons,3**NumberOfIons*2**NumberOfIons),order='F').transpose()
     #print(pulsetable)
     # Now the experimental data are stored in the same way:
     # probs = reshape(probs',1,NoExp*2^NoI)';
-    probs=np.reshape(probs.transpose(),(1,3**NumberOfIons*2**NumberOfIons),'FORTRAN').transpose()
+    probs=np.reshape(probs.transpose(),(1,3**NumberOfIons*2**NumberOfIons),order='F').transpose()
     probs=probs[:,0]
     # For each experimental data point, a measurement of the D state has to be
     # labeled with +1, a measurement of the S-state with 0;
     # meas = (double(dec2bin(2^NoI-1:-1:0)')-double('0'))';
     # meastable = kron(ones(NoExp,1),meas);
-    meas=np.zeros((2**NumberOfIons,NumberOfIons))
+    meas=np.zeros((2**NumberOfIons,NumberOfIons),dtype=np.int)
     k=0
-    for i in xrange(2**NumberOfIons-1,-1,-1):
-        meas[k,:]=np.array(__dec2base(i,2,NumberOfIons),dtype=int)
+    for i in range(2**NumberOfIons-1,-1,-1):
+        meas[k,:]=np.array(__dec2base(i,2,NumberOfIons))
         k+=1
-    a=np.ones((3**NumberOfIons,1))
+    a=np.ones((3**NumberOfIons,1),dtype=np.int)
     meastable=npml.kron(a,meas)
     #meastable = meastable + 2 * pulsetable + 1;
     #Ntable=length(meastable);
@@ -119,10 +119,10 @@ def iterfun(data,NumberOfIterations, path=None):
 #    print(toc2-tic,'seconds for initialisation have elapsed')
     AllOp2 = np.zeros((Ntable,2**NumberOfIons,2**NumberOfIons),dtype=complex)
     AllOpTransposed = np.zeros((Ntable,2**NumberOfIons,2**NumberOfIons),dtype=complex)
-    for k in xrange(Ntable):
+    for k in range(Ntable):
         ind=meastable[k,:].copy()
         Op=P[ind[0],:,:]
-        for m in xrange(1,NumberOfIons):
+        for m in range(1,NumberOfIons):
             Op=npml.kron(Op,P[ind[m],:,:])
         AllOp.append(Op)
         AllOp2[k,:,:] = Op
@@ -132,10 +132,10 @@ def iterfun(data,NumberOfIterations, path=None):
 #    print(toc3-toc2,'seconds for operator initalisation')
     ROp_start=np.zeros((2**NumberOfIons,2**NumberOfIons),dtype=complex)
     list_probOp = np.zeros(Ntable)
-    for i in xrange(NumberOfIterations):
+    for i in range(NumberOfIterations):
         ROp=ROp_start.copy()
         list_probOp2 = np.sum(np.sum(npml.multiply(rho, AllOpTransposed), axis = 1), axis = 1)
-        # for k in xrange(Ntable):
+        # for k in range(Ntable):
         #     Op=AllOp[k]
         #     # the following is tons faster because it relies on element wise multiplication only
         #     probOp=(rho*Op.transpose()).sum()
@@ -176,7 +176,7 @@ def __dec2base_precise(n, b):
 
 def __dec2base(n,b,l):
     list=__dec2base_precise(n,b)
-    for i in xrange(l-len(list)):
+    for i in range(l-len(list)):
         list.insert(0,0)
     return list
 

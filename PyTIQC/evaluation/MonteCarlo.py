@@ -52,7 +52,7 @@ class MonteCarloState:
             self.matrix_list = []
         self.distance_list = []
         try:
-            for index in xrange(self.nr_of_samples):
+            for index in range(self.nr_of_samples):
                 if self.verbose:
                     print("Processing sample " + str(index) + " of " +str(self.nr_of_samples))
                 data = self.generate_data()
@@ -71,7 +71,7 @@ class MonteCarloState:
     def generate_data(self):
         multi_data = np.zeros(self.data_array.shape)
         nr_rows =self.data_array.shape[0]
-        for row in xrange(nr_rows):
+        for row in range(nr_rows):
             this_data = self.data_array[row, 1:]
             multi_data[row, 1:] = np.random.multinomial(self.nr_of_cycles,this_data,1) / float(self.nr_of_cycles)
         multi_data[:,0] = self.data_array[:,0]

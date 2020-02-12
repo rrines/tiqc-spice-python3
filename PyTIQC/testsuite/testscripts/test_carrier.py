@@ -13,7 +13,6 @@ import numpy as np
 import pylab as pl
 
 from scipy.optimize import leastsq
-import PyTIQC.tools.progressbar as progbar
 
 pi = np.pi
 
@@ -29,7 +28,7 @@ class TestUserFunction(unittest.TestCase):
         if(self.plot):
             TestUserFunction.figNum += 1
             figNum = TestUserFunction.figNum + TestUserFunction.previous_tests
-            print "(figure",figNum,")"
+            print("(figure",figNum,")")
         return figNum                                                 
 
     def test_Rabi_carrier(self):
@@ -103,7 +102,7 @@ def run():
 # ---------------------------
 
 def test_Rabi_carrier_detailed(figNum):
-    #print TestUserFUnction.figNum, TestUserFunction.figNum_start, "<<<<"
+    #print(TestUserFUnction.figNum, TestUserFunction.figNum_start, "<<<<")
     NumberOfIons = 1
     PhononOverhead = 2
 
@@ -140,20 +139,20 @@ def test_Rabi_carrier_detailed(figNum):
 
     par, covmat, infodict, mesg, ier = leastsq(errfun, startparams, args=(x,y), full_output = True)
 
-    #print startparams
-    #print par
+    #print(startparams)
+    #print(par)
 
-    #print startparams-par
+    #print(startparams-par)
 
     epsilon = 10**-5
     if par[0] - startparams[0] > epsilon:
-        print "amplitude of Rabi oscillations wrong"
+        print("amplitude of Rabi oscillations wrong")
     if par[1] - startparams[1] > epsilon:
-        print "frequency of Rabi oscillations wrong"
+        print("frequency of Rabi oscillations wrong")
     if par[2] - startparams[2] > epsilon:
-        print "phase of Rabi oscillations wrong"
+        print("phase of Rabi oscillations wrong")
     if par[3] - startparams[3] > epsilon:
-        print "offset of Rabi oscillations wrong"
+        print("offset of Rabi oscillations wrong")
 
 
     return np.all(par-startparams < epsilon)
@@ -204,21 +203,21 @@ def test_Ramsey_carrier_detailed(figNum):
 
     par, covmat, infodict, mesg, ier = leastsq(errfun, startparams, args=(phi,ex), full_output = True)
 
-    #print startparams
-    #print par
+    #print(startparams)
+    #print(par)
 
-    #print startparams-par
+    #print(startparams-par)
 
     epsilon = 10**-5
 
     if par[0] - startparams[0] > epsilon:
-        print "amplitude of Ramsey experiment wrong"
+        print("amplitude of Ramsey experiment wrong")
     if par[1] - startparams[1] > epsilon:
-        print "frequency of Ramsey experiment wrong"
+        print("frequency of Ramsey experiment wrong")
     if par[2] - startparams[2] > epsilon:
-        print "phase of Ramsey experiment wrong"
+        print("phase of Ramsey experiment wrong")
     if par[3] - startparams[3] > epsilon:
-        print "offset of Ramsey experiment wrong"
+        print("offset of Ramsey experiment wrong")
 
 
     return np.all(par-startparams < epsilon)
@@ -274,22 +273,22 @@ def test_ACStark_detailed(figNum):
 
     epsilon = 10**-3
     if par[0] - startparams[0] > epsilon:
-        print "amplitude of AC oscillations wrong"
+        print("amplitude of AC oscillations wrong")
     if par[1] - startparams[1] > epsilon:
-        print "frequency of AC oscillations wrong"
+        print("frequency of AC oscillations wrong")
     if par[2] - startparams[2] > epsilon:
-        print "phase of AC oscillations wrong"
+        print("phase of AC oscillations wrong")
     if par[3] - startparams[3] > epsilon:
-        print "offset of AC oscillations wrong"
+        print("offset of AC oscillations wrong")
 
     return np.all(par-startparams < epsilon), data1, fitfun, par, startparams
 
 if __name__ == "__main__":
-    #print test_Rabi_carrier_detailed()
-    #print test_Ramsey_carrier_detailed()
-    #print test_ACStark_detailed()
+    #print(test_Rabi_carrier_detailed())
+    #print(test_Ramsey_carrier_detailed())
+    #print(test_ACStark_detailed())
     [val, data1, fitfun, par, startparams] = test_ACStark_detailed()
-    print val
+    print(val)
     
 
 # test_carrier.py ends here

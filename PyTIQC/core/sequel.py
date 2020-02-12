@@ -23,7 +23,7 @@ def getsim(simid=None):
     dbx = MySQLdb.connect(user='tiqcspice',passwd='tiqc_cluster1',db='tiqcspice',host='marvin')
     db = dbx.cursor()
     
-    sql = 'select * from Simulation'	
+    sql = 'select * from Simulation'
     db.execute(sql)
     for k in db.fetchall():
         (id, name, dt, param, pp, extra) = k
@@ -53,7 +53,7 @@ def insertSimToDB(pulseseq, params, dec):
 
     dbx = MySQLdb.connect(user='tiqcspice',passwd='tiqc_cluster1',db='tiqcspice',host='marvin')
     db = dbx.cursor()
-    	
+    
     sql = "insert into Simulation (name, pulseseq, params, hspace, decoherence) values ('%s', '%s','%s','%s','%s')" \
         % (dec.doSQLname, entry_ps, entry_params, entry_hspace, entry_dec)
     try:
@@ -76,7 +76,7 @@ def insertJobToDB(data):
 
     dbx = MySQLdb.connect(user='tiqcspice',passwd='tiqc_cluster1',db='tiqcspice',host='marvin')
     db = dbx.cursor()
-    	
+    
     sql = "insert into Job (time, state, hspace) values ('%s','%s','%s')" \
         % (entry_T, entry_Y, entry_hspace)
     try:

@@ -74,7 +74,7 @@ def chirotinfidel(rot_vector, ideal_chi, my_chi,return_chi=False):
 
     Rtot = 1
     AllPaulis = [1]
-    for k in xrange(NrOfQubits):
+    for k in range(NrOfQubits):
         Rtot = npml.kron(Rtot, R(rot_vector[3*k:3*k+3]))
         AllPaulis = proctom.baseappend(AllPaulis, Paulis)
 

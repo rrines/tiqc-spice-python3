@@ -4,8 +4,7 @@ import PyTIQC.core.qctools as qc
 import PyTIQC.core.gates as U
 import matplotlib.pyplot as pl
 import copy, pickle
-try: import pp
-except: pass
+from PyTIQC.tools import pp
 
 pi = np.pi
 
@@ -33,9 +32,9 @@ class Kitaev:
               sim.Rac(params, pi/2**(i+1), 0, 0)]
                     for i in range(self.nOps)]
 
-        Hadamard0 = sim.PulseSequence( [ \
+        Hadamard = lambda k: sim.PulseSequence( [ \
                 sim.Rcar(params, pi/4, pi),
-                sim.Rac(params, pi, 0),
+                sim.Rac(params, pi, k),
                 sim.Rcar(params, pi/4, 0) ])
 
         def PulseSeqWithControls(ctl):
@@ -44,11 +43,11 @@ class Kitaev:
             pulseseq = sim.PulseSequence([])
             
             for k in range(self.nOps):
-                pulseseq.append(Hadamard0)
+                pulseseq.append(Hadamard(0))
                 pulseseq.append(Perms[k])
                 pulseseq += [copy.deepcopy(controlRots[i] \
                               [int(ctlstr[self.nOps-i-k-1])]) for i in range(k)]
-                pulseseq.append(Hadamard0)
+                pulseseq.append(Hadamard(0))
 
                 if k == self.nOps-1:
                     pulseseq += [ \
@@ -108,6 +107,10 @@ class Kitaev:
         self.result_mean = np.mean(resultAll, axis=0)
         self.result_std = np.std(resultAll, axis=0)
 
+    @staticmethod
+    def jobfunc(pulseseq, params, dec):
+        return qc.simulateevolution(pulseseq, params, dec)
+
     def simulateevolution(self, pulseseq, params, dec, doPP=False):
         if not doPP:
             for ctl in range(2**(self.nOps-1)):
@@ -119,21 +122,21 @@ class Kitaev:
 
         else:
             job_server = pp.Server( \
-                ncpus = 1, 
+                ncpus = 4, 
                 ppservers = params.ppservers, 
                 secret = params.ppsecret)
 
             self.data_group = [0 for _ in range(2**(self.nOps-1))]
             dec.doPPprintstats = True
             def jobfunc(x, pulseseq, params, dec):
-                return PyTIQC.core.qctools.simulateevolution(pulseseq[x], params, dec)
+                return qc.simulateevolution(pulseseq[x], params, dec)
             controls = range(2**(self.nOps-1))
-            jobs = [(ctl, job_server.submit(jobfunc, \
-                    args=(ctl, pulseseq, params, dec), \
+            jobs = [(ctl, job_server.submit(Kitaev.jobfunc, \
+                    args=(copy.deepcopy(pulseseq[ctl]), params, dec), \
                     modules=('numpy','scipy', 'PyTIQC.core.simtools', \
                              'PyTIQC.core.qctools', 'Kitaev',
                              'PyTIQC.core.qmtools', 'PyTIQC.core.sequel', \
-                             'PyTIQC.tools.progressbar') ) )\
+                             'progressbar') ) )\
                          for ctl in controls ]
             for ctl, job in jobs:
                 data1 = job()

@@ -97,7 +97,7 @@ class DensityMatrixObject:
     rho_size = self.exprho.shape[0]
     off_diag = abs(self.exprho[rho_size-1,0])
     sum_array = np.zeros(rho_size/2.0-1)
-    for index in xrange(rho_size/2.0-1):
+    for index in range(rho_size/2.0-1):
       sum_array[index] = self.exprho[index+1,index+1] + \
           self.exprho[rho_size-index-1][rho_size-index-1]
     print("max unwanted: " +str(np.max(sum_array)))

@@ -335,8 +335,8 @@ class ReadData:
         array_lines = len(file_array)
         array_rows = len(file_array[0])
         my_data = numpy.zeros((array_lines, array_rows))
-        for line in xrange(array_lines):
-            for elem in xrange(array_rows):
+        for line in range(array_lines):
+            for elem in range(array_rows):
                 my_data[line, elem] = float(file_array[line][elem])
         self.data_dict[type_string] = my_data
 
@@ -428,20 +428,20 @@ def readcqst(filename, path =None, nr_of_splits=2, nr_of_ions=4):
     nr_of_cycles = data.shape[1]
     print(nr_of_cycles)
     cprb_split_list = []
-    for split_item in xrange(nr_of_splits):
+    for split_item in range(nr_of_splits):
         frame_cprb = np.zeros((len(seq_par_list), 2**nr_of_ions+1))
         frame_cprb[:,0] = data[:,0]
         cprb_split_list.append(frame_cprb)
         
-    for seq_index in xrange(len(seq_par_list)):
+    for seq_index in range(len(seq_par_list)):
         my_row = data[seq_index, 1:]
         mydat_array = [[],[]]
         for mydat in my_row:
             my_cqst_array =  seperate_data(mydat)
-            for myindex in xrange(len(my_cqst_array)):
+            for myindex in range(len(my_cqst_array)):
                 mydat_array[myindex].append(my_cqst_array[myindex])
 
-        for mysplit_index in xrange(len(mydat_array)):
+        for mysplit_index in range(len(mydat_array)):
             mydat = mydat_array[mysplit_index]
             my_count = 0
             for my_single in mydat:

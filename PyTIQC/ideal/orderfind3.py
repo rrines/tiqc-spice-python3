@@ -68,9 +68,8 @@ for ind in psilist:
     psiout = np.dot(Uof, psi)
 
     # print the results
-    print
-    print "input state", np.binary_repr(ind).zfill(5)
+    print("\ninput state", np.binary_repr(ind).zfill(5))
     #U.displaystates(psiout)
-    #print "traced"
+    #print("traced")
     U.displaytracedstates(psiout, 5, tracemask='11000')
 

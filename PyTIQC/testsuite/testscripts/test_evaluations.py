@@ -17,7 +17,7 @@ import PyTIQC.evaluation.processtomography.quantumprocess as qproc
 
 pi = np.pi
 
-class TestUserFunction(unittest.TestCase):	
+class TestUserFunction(unittest.TestCase):
 
     plot = False
     previous_tests = 0
@@ -28,7 +28,7 @@ class TestUserFunction(unittest.TestCase):
         if(self.plot):
             TestUserFunction.figNum += 1
             figNum = TestUserFunction.figNum + TestUserFunction.previous_tests
-            print "(figure",figNum,")"
+            print("(figure",figNum,")")
         return figNum                                                 
 
     def test_StateTomo(self):
@@ -81,7 +81,7 @@ def test_StateTomo_detailed():
     data_dmr = ScanObj.output_dict['qstates_camera']
     rho = dmr.IterML.iterfun(data_dmr, 100)
     #if np.real(rho[3,3]) > 0.99:
-    #    print 'statetomo passed'
+    #    print('statetomo passed')
 
     return np.real(rho[3,3]) > 0.99
 
@@ -105,15 +105,15 @@ def test_ProcTomo_detailed():
     data_proctom = ScanObj.output_dict['qstates_camera']
     chi = proctom.proctomo(data_proctom, 100)
     #if np.real(chi[0,0]) > 0.99:
-    #    print 'proctomo passed'
+    #    print('proctomo passed')
 
     chiId = qproc.Unitary2Chi(pulseseq[0].Uidtr.conjugate())
     return np.max(abs(chi - chiId)) < 0.001
 
 
 if __name__ == "__main__":
-    print test_StateTomo_detailed()
-    print test_ProcTomo_detailed()
+    print(test_StateTomo_detailed())
+    print(test_ProcTomo_detailed())
 
 
 # test_evaluations.py ends here

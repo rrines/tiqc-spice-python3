@@ -19,8 +19,7 @@ from . import densitymatrixreconstruction as dmr
 from . processtomography import proctom
 
 import numpy as np
-try: import pp
-except: pass
+from PyTIQC.tools import pp
 mod = np.mod
 pi = np.pi
 
@@ -50,20 +49,20 @@ def StateTomo(parameter, simparams, use_ideal=False):
     par = int(parameter)
     nuions = simparams.hspace.nuions
     # first qubit
-    if (mod(par/3**0, 3) == 1): total_append.append(sim.Rcar(simparams, pi/2, 1.5*pi, 0))
-    if (mod(par/3**0, 3) == 2): total_append.append(sim.Rcar(simparams, pi/2, pi, 0))
+    if (mod(par//3**0, 3) == 1): total_append.append(sim.Rcar(simparams, pi/2, 1.5*pi, 0))
+    if (mod(par//3**0, 3) == 2): total_append.append(sim.Rcar(simparams, pi/2, pi, 0))
 
     # second qubit
-    if (mod(par/3**1, 3) == 1): total_append.append(sim.Rcar(simparams, pi/2, 1.5*pi, 1))
-    if (mod(par/3**1, 3) == 2): total_append.append(sim.Rcar(simparams, pi/2, pi, 1))
+    if (mod(par//3**1, 3) == 1): total_append.append(sim.Rcar(simparams, pi/2, 1.5*pi, 1))
+    if (mod(par//3**1, 3) == 2): total_append.append(sim.Rcar(simparams, pi/2, pi, 1))
 
     # third qubit
-    if (mod(par/3**2, 3) == 1): total_append.append(sim.Rcar(simparams, pi/2, 1.5*pi, 2))
-    if (mod(par/3**2, 3) == 2): total_append.append(sim.Rcar(simparams, pi/2, pi, 2))
+    if (mod(par//3**2, 3) == 1): total_append.append(sim.Rcar(simparams, pi/2, 1.5*pi, 2))
+    if (mod(par//3**2, 3) == 2): total_append.append(sim.Rcar(simparams, pi/2, pi, 2))
 
     # fourth qubit
-    if (mod(par/3**3, 3) == 1): total_append.append(sim.Rcar(simparams, pi/2, 1.5*pi, 3))
-    if (mod(par/3**3, 3) == 2): total_append.append(sim.Rcar(simparams, pi/2, pi, 3))
+    if (mod(par//3**3, 3) == 1): total_append.append(sim.Rcar(simparams, pi/2, 1.5*pi, 3))
+    if (mod(par//3**3, 3) == 2): total_append.append(sim.Rcar(simparams, pi/2, pi, 3))
 
     if use_ideal:
         for pulse in total_append:
@@ -82,19 +81,19 @@ def ProcTomoPrepare(parameter, simparams, use_ideal=False):
     total_prepend = []
     par = int(parameter)
     # first qubit
-    if (mod(par/(4**0 * 3**nuions), 4) == 1): total_prepend.append(sim.Rcar(simparams, pi/2 , 0, nuions-1))
-    if (mod(par/(4**0 * 3**nuions), 4) == 2): total_prepend.append(sim.Rcar(simparams, pi/2, pi*0.5, nuions-1))
-    if (mod(par/(4**0 * 3**nuions), 4) == 3): total_prepend.append(sim.Rcar(simparams, pi, 0, nuions-1))
+    if (mod(par//(4**0 * 3**nuions), 4) == 1): total_prepend.append(sim.Rcar(simparams, pi/2 , 0, nuions-1))
+    if (mod(par//(4**0 * 3**nuions), 4) == 2): total_prepend.append(sim.Rcar(simparams, pi/2, pi*0.5, nuions-1))
+    if (mod(par//(4**0 * 3**nuions), 4) == 3): total_prepend.append(sim.Rcar(simparams, pi, 0, nuions-1))
 
     # second qubit
-    if (mod(par/(4**1 * 3**nuions), 4) == 1) and nuions >= 2 : total_prepend.append(sim.Rcar(simparams, pi/2 , 0, nuions-2))
-    if (mod(par/(4**1 * 3**nuions), 4) == 2) and nuions >= 2 : total_prepend.append(sim.Rcar(simparams, pi/2, pi*0.5, nuions-2))
-    if (mod(par/(4**1 * 3**nuions), 4) == 3) and nuions >= 2 : total_prepend.append(sim.Rcar(simparams, pi, 0, nuions-2))
+    if (mod(par//(4**1 * 3**nuions), 4) == 1) and nuions >= 2 : total_prepend.append(sim.Rcar(simparams, pi/2 , 0, nuions-2))
+    if (mod(par//(4**1 * 3**nuions), 4) == 2) and nuions >= 2 : total_prepend.append(sim.Rcar(simparams, pi/2, pi*0.5, nuions-2))
+    if (mod(par//(4**1 * 3**nuions), 4) == 3) and nuions >= 2 : total_prepend.append(sim.Rcar(simparams, pi, 0, nuions-2))
 
     # third qubit
-    if (mod(par/(4**2 * 3**nuions), 4) == 1) and nuions >= 3 : total_prepend.append(sim.Rcar(simparams, pi/2 , 0, nuions-3))
-    if (mod(par/(4**2 * 3**nuions), 4) == 2) and nuions >= 3 : total_prepend.append(sim.Rcar(simparams, pi/2, pi*0.5, nuions-3))
-    if (mod(par/(4**2 * 3**nuions), 4) == 3) and nuions >= 3 : total_prepend.append(sim.Rcar(simparams, pi, 0, nuions-3))
+    if (mod(par//(4**2 * 3**nuions), 4) == 1) and nuions >= 3 : total_prepend.append(sim.Rcar(simparams, pi/2 , 0, nuions-3))
+    if (mod(par//(4**2 * 3**nuions), 4) == 2) and nuions >= 3 : total_prepend.append(sim.Rcar(simparams, pi/2, pi*0.5, nuions-3))
+    if (mod(par//(4**2 * 3**nuions), 4) == 3) and nuions >= 3 : total_prepend.append(sim.Rcar(simparams, pi, 0, nuions-3))
 
     if use_ideal:
         for pulse in total_prepend:
@@ -118,16 +117,16 @@ def ProcTomoAnalyse(parameter, simparams, use_ideal=False):
     total_append = []
     par = int(parameter)
     # first qubit
-    if (mod(par/3**0, 3) == 1): total_append.append(sim.Rcar(simparams, pi/2, pi*1.5, 0))
-    if (mod(par/3**0, 3) == 2): total_append.append(sim.Rcar(simparams, pi/2, pi*1, 0))
+    if (mod(par//3**0, 3) == 1): total_append.append(sim.Rcar(simparams, pi/2, pi*1.5, 0))
+    if (mod(par//3**0, 3) == 2): total_append.append(sim.Rcar(simparams, pi/2, pi*1, 0))
 
     # second qubit
-    if (mod(par/3**1, 3) == 1) and nuions >= 2: total_append.append(sim.Rcar(simparams, pi/2, pi*1.5, 1))
-    if (mod(par/3**1, 3) == 2) and nuions >= 2: total_append.append(sim.Rcar(simparams, pi/2, pi*1, 1))
+    if (mod(par//3**1, 3) == 1) and nuions >= 2: total_append.append(sim.Rcar(simparams, pi/2, pi*1.5, 1))
+    if (mod(par//3**1, 3) == 2) and nuions >= 2: total_append.append(sim.Rcar(simparams, pi/2, pi*1, 1))
 
     # third qubit
-    if (mod(par/3**2, 3) == 1) and nuions >= 3: total_append.append(sim.Rcar(simparams, pi/2, pi*1.5, 2))
-    if (mod(par/3**2, 3) == 2) and nuions >= 3: total_append.append(sim.Rcar(simparams, pi/2, pi*1, 2))
+    if (mod(par//3**2, 3) == 1) and nuions >= 3: total_append.append(sim.Rcar(simparams, pi/2, pi*1.5, 2))
+    if (mod(par//3**2, 3) == 2) and nuions >= 3: total_append.append(sim.Rcar(simparams, pi/2, pi*1, 2))
 
     if use_ideal:
         for pulse in total_append:
@@ -253,7 +252,7 @@ class ScanParameter_in_Sequence:
         jobs = [job_server.submit(simulateevolution, \
             args=(parlist[i], pulseseq_list[i], params_list[i], dec_list[i]), \
             depfuncs=(), \
-            modules=('numpy','scipy', 'PyTIQC.core.simtools', 'PyTIQC.core.qmtools','PyTIQC.tools.progressbar','PyTIQC.core.qctools') ) for i in xrange(len(parlist)) ]
+            modules=('numpy','scipy', 'PyTIQC.core.simtools', 'PyTIQC.core.qmtools','PyTIQC.tools.progressbar','PyTIQC.core.qctools') ) for i in range(len(parlist)) ]
 
         for job in jobs:
             [dataobj, index] = job()

@@ -30,16 +30,16 @@ def Unitary2Chi(U, B = None):
 
     A = a
 
-    for k in xrange(NumberOfQubits-1):
+    for k in range(NumberOfQubits-1):
         A = proctom.baseappend(A,a)
 
     lam = np.zeros(chidim, dtype=complex)
-    for k in xrange(chidim):
+    for k in range(chidim):
         lam[k] = np.trace(np.dot(A[k].transpose().conjugate(),U))/2**NumberOfQubits
 
     chi = np.zeros((chidim,chidim), dtype=complex)
-    for k in xrange(chidim):
-        for l in xrange(chidim):
+    for k in range(chidim):
+        for l in range(chidim):
             chi[k,l]=lam[k]*lam[l].conjugate()
     return chi
 
@@ -91,8 +91,8 @@ def OSumToChoi(chi):
 
     A = proctom.proc_channel_operators(NumberOfQubits)
 
-    for m in xrange(4**NumberOfQubits):
-        for n in xrange(4**NumberOfQubits):
+    for m in range(4**NumberOfQubits):
+        for n in range(4**NumberOfQubits):
             rhoout += chi[m,n] * np.dot(npml.kron(id,A[:,:,m]), np.dot(choi, npml.kron(id,A[:,:,n]).transpose().conjugate()))
 
     rho_choi = rhoout
@@ -110,7 +110,7 @@ def KrausToChoi(Kraus):
 
     choi = ChoiIn(NumberOfQubits)
 
-    for k in xrange(NumOfOperators):
+    for k in range(NumOfOperators):
         rhoout += np.dot(npml.kron(id,Kraus[k,:,:]), np.dot(choi, npml.kron(id,Kraus[k,:,:]).transpose().conjugate()))
 
     return rhoout
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     choi = KrausToChoi(mykraus)
 
     ew, ev = np.linalg.eig(choi)
-    for k in xrange(ev.shape[0]):
+    for k in range(ev.shape[0]):
         if ew[k] > 10e-5:
             print(ew[k])
             print(ew[k]*ev[:,k].reshape(2,2).transpose())

@@ -68,8 +68,8 @@ def baseappend(opin, opappend):
     len_opin = len(opin)
     len_opappend = len(opappend)
     opout = []
-    for k in xrange(len_opappend):
-        for l in xrange(len_opin):
+    for k in range(len_opappend):
+        for l in range(len_opin):
             opout.append(npml.kron(opappend[k],opin[l]))
     return opout
 
@@ -94,8 +94,8 @@ def proctomo(data, NumberOfIterations = 100, use_bell_basis=False):
 #  tic = time.time()
     RhoTObs = np.zeros((NRho*NObs,4**NumberOfIons,4**NumberOfIons),dtype=complex)
     TransposedRhoTObs = np.zeros((NRho*NObs,4**NumberOfIons,4**NumberOfIons),dtype=complex)
-    for m in xrange(NRho):
-        for n in xrange(NObs):
+    for m in range(NRho):
+        for n in range(NObs):
             tmp = npml.kron(RhoIn[m,:,:].transpose(),Obs[n,:,:])
             RhoTObs[m*NObs+n,:,:] = tmp
             TransposedRhoTObs[m*NObs+n,:,:] = tmp.transpose()
@@ -112,19 +112,19 @@ def proctomo(data, NumberOfIterations = 100, use_bell_basis=False):
 
     v = np.eye(2**NumberOfIons);
     # Quantenoperatoren
-    for m in xrange(2**NumberOfIons):
-        for n in xrange(2**NumberOfIons):
+    for m in range(2**NumberOfIons):
+        for n in range(2**NumberOfIons):
             QOps[:,:,n+2**NumberOfIons*m] = np.outer(v[:,m],v[:,n])
 
-    for k in xrange(4**NumberOfIons):
+    for k in range(4**NumberOfIons):
         Op_tmp = 1
-        for l in xrange(NumberOfIons):
-            Op_tmp = npml.kron(Paulis[np.mod(k/4**l,4)],Op_tmp)
+        for l in range(NumberOfIons):
+            Op_tmp = npml.kron(Paulis[np.mod(k//4**l,4)],Op_tmp)
         QOps2[:,:,k]=Op_tmp
 
 
-    for m in xrange(4**NumberOfIons):
-        for n in xrange(4**NumberOfIons):
+    for m in range(4**NumberOfIons):
+        for n in range(4**NumberOfIons):
             AB[m,n] = np.sum(QOps[:,:,m]*np.transpose(QOps2[:,:,n]))
             AA[m,n] = np.sum(QOps[:,:,m]*np.transpose(QOps[:,:,n]))
 
@@ -149,9 +149,9 @@ def proctomo(data, NumberOfIterations = 100, use_bell_basis=False):
     #S = np.zeros(((2**NumberOfIons)**2,(2**NumberOfIons)**2))
 
 #    tic = time.time()
-    for k in xrange(NumberOfIterations):
+    for k in range(NumberOfIterations):
         ObsValCalc2 = np.real(np.sum(np.sum(npml.multiply(S0, TransposedRhoTObs), axis = 1), axis = 1))
-        # for mn in xrange(NRho*NObs):
+        # for mn in range(NRho*NObs):
         #     ObsValCalc[mn] = np.sum(S0*np.transpose(RhoTObs[mn,:,:]))
         # alternative: this seems to be a factor of 2 faster for 2 ions, but becomes a factor of two slower for 3 ions ...
 #         S0_long = tile(S0,(NRho*NObs,1,1))
@@ -175,13 +175,13 @@ def proctomo(data, NumberOfIterations = 100, use_bell_basis=False):
     # all the info is in the S matrix
 
     V = np.zeros(((2**NumberOfIons)**2,(2**NumberOfIons)**2))
-    for q in xrange(2**NumberOfIons):
-        for m in xrange(2**NumberOfIons):
+    for q in range(2**NumberOfIons):
+        for m in range(2**NumberOfIons):
             V[:,q+2**NumberOfIons*m] = npml.kron(v[:,q],v[:,m])
 
     Chi = np.zeros(((2**NumberOfIons)**2,(2**NumberOfIons)**2),dtype = complex)
-    for p in xrange(4**NumberOfIons):
-        for q in xrange(4**NumberOfIons):
+    for p in range(4**NumberOfIons):
+        for q in range(4**NumberOfIons):
             Chi[p,q] = np.dot(np.conjugate(np.transpose(V[:,p])),np.dot(S,V[:,q]))
 
     Chi_final = np.dot(C,np.dot(Chi,np.transpose(np.conjugate(C))))
@@ -220,9 +220,9 @@ def LoadProctomData(data):
 
     # a bit tricky to get the right thetas for the ions now
     theta_list = []
-    for k in xrange(NumberOfIons):
+    for k in range(NumberOfIons):
         theta_tmp = 1
-        for l in xrange(NumberOfIons):
+        for l in range(NumberOfIons):
             if k==l:
                 theta_tmp = npml.kron(theta_proc,theta_tmp)
             else:
@@ -230,9 +230,9 @@ def LoadProctomData(data):
         theta_list.append(theta_tmp)
 
     phi_list = []
-    for k in xrange(NumberOfIons):
+    for k in range(NumberOfIons):
         phi_tmp = 1
-        for l in xrange(NumberOfIons):
+        for l in range(NumberOfIons):
             if k == l:
                 phi_tmp = npml.kron(phi_proc,phi_tmp)
             else:
@@ -245,14 +245,14 @@ def LoadProctomData(data):
 
 #  print((theta_list,phi_list))
 #  return (theta_list,phi_list)
-    for k in xrange(NRho):
+    for k in range(NRho):
         Op_tmp = np.zeros((NumberOfIons,2,2),dtype=complex)
-        for l in xrange(NumberOfIons):
+        for l in range(NumberOfIons):
             Op_tmp[l,:,:] = lnlg.expm(1j*theta_list[l][k]/2*(np.cos(phi_list[l][k])*X-np.sin(phi_list[l][k])*Y))
 
         Op = Op_tmp[0,:,:]
         if NumberOfIons > 1:
-            for l in xrange(NumberOfIons-1):
+            for l in range(NumberOfIons-1):
                 Op = npml.kron(Op,Op_tmp[l+1,:,:])
 
         psi_in = np.dot(Op,psistart)
@@ -261,16 +261,16 @@ def LoadProctomData(data):
 
     # new lets start to work on teh projectors
     ez_list = []
-    for k in xrange(2**NumberOfIons):
+    for k in range(2**NumberOfIons):
         ez_list.append(np.eye(2**NumberOfIons)[:,k])
 
     thetaIXY_state = np.array([0, 0.5, 0.5])*np.pi
     phiIXY_state = np.array([0, 1.5, 1.0])*np.pi
 
     theta_state_list = []
-    for k in xrange(NumberOfIons):
+    for k in range(NumberOfIons):
         theta_tmp = 1
-        for l in xrange(NumberOfIons):
+        for l in range(NumberOfIons):
             if k==l:
                 theta_tmp = npml.kron(thetaIXY_state,theta_tmp)
             else:
@@ -279,9 +279,9 @@ def LoadProctomData(data):
 #    theta_state_list.insert(0,theta_tmp)
 
     phi_state_list = []
-    for k in xrange(NumberOfIons):
+    for k in range(NumberOfIons):
         phi_tmp = 1
-        for l in xrange(NumberOfIons):
+        for l in range(NumberOfIons):
             if k == l:
                 phi_tmp = npml.kron(phiIXY_state, phi_tmp)
             else:
@@ -289,32 +289,32 @@ def LoadProctomData(data):
         phi_state_list.append(phi_tmp)
 #    phi_state_list.insert(0,phi_tmp)
 
-    for k in xrange(np.int(NObs/2**NumberOfIons)):
+    for k in range(np.int(NObs/2**NumberOfIons)):
         Op_tmp = np.zeros((NumberOfIons,2,2),dtype=complex)
-        for l in xrange(NumberOfIons):
+        for l in range(NumberOfIons):
             Op_tmp[l,:,:]=lnlg.expm(-1j*theta_state_list[l][k]/2*(np.cos(phi_state_list[l][k])*X-np.sin(phi_state_list[l][k])*Y));
 
         Op = Op_tmp[0,:,:]
         if NumberOfIons > 1:
-            for l in xrange(NumberOfIons-1):
+            for l in range(NumberOfIons-1):
 #         Op = npml.kron(Op_tmp[l+1,:,:],Op)
                 Op = npml.kron(Op_tmp[l+1,:,:],Op)
 
 #        print(Op)
 #        sqrtm(Op)
 
-        for m in xrange(2**NumberOfIons):
+        for m in range(2**NumberOfIons):
             psi = np.dot(Op,np.eye(2**NumberOfIons)[:,m])
             Obs[k*(2**NumberOfIons)+m,:,:] = np.outer(psi,psi.conjugate())
 #    print(Obs)
 
 
     # calculate obsval
-    for k in xrange(NRho):
-        for l in xrange(np.int(NObs/(2**NumberOfIons))):
+    for k in range(NRho):
+        for l in range(np.int(NObs/(2**NumberOfIons))):
             obsind = NObs*k + (2**NumberOfIons)*l;
-            datind = NObs/(2**NumberOfIons) * k + l;
-            for m in xrange(2**NumberOfIons):
+            datind = NObs//(2**NumberOfIons) * k + l;
+            for m in range(2**NumberOfIons):
                 ObsVal[obsind+m]=dat[datind,m]
     return (RhoIn, Obs, ObsVal, NRho, NObs)
 
@@ -328,7 +328,7 @@ def __ptrace(C,d1,d2,gamma):
     D = d1*d2
 
     if gamma == 2:
-        ind = np.reshape(np.conjugate(np.transpose(np.reshape(np.arange(D),(d2,d1),'FORTRAN'))),(1,D),'FORTRAN')
+        ind = np.reshape(np.conjugate(np.transpose(np.reshape(np.arange(D),(d2,d1),order='F'))),(1,D),order='F')
         C = C[np.ix_(ind.tolist()[0],ind.tolist()[0])]
     else:
         d3 = d2
@@ -337,7 +337,7 @@ def __ptrace(C,d1,d2,gamma):
 
     Ct = 0
     L = np.arange(d1)
-    for k in xrange(d2):
+    for k in range(d2):
         ind = L + k*d1
         indl = ind.tolist()
         Ct += C[np.ix_(indl,indl)]
@@ -357,9 +357,9 @@ def proc_channel_operators(NumberOfIons):
     A = np.zeros((2**NumberOfIons, 2**NumberOfIons, 4**NumberOfIons),dtype=complex)
 
     # create operators
-    for k in xrange(4**NumberOfIons):
+    for k in range(4**NumberOfIons):
         tmp = 1
-        for l in xrange(NumberOfIons):
+        for l in range(NumberOfIons):
             # print(np.mod(int(1.*k/4**l),4))
             tmp = npml.kron(tmp,Paulis[np.mod(int(1.*k/4**l),4)])
         A[:,:,k] = tmp
@@ -384,20 +384,20 @@ def proc_channel_output(chi, input_rho):
         # create ouput
         rhoout = np.zeros((2**NumberOfIons,2**NumberOfIons),dtype=complex)
 
-        for m in xrange(4**NumberOfIons):
-            for n in xrange(4**NumberOfIons):
+        for m in range(4**NumberOfIons):
+            for n in range(4**NumberOfIons):
                 rhoout += chi[m,n] * np.dot(A[:,:,m], np.dot(input_rho,A[:,:,n].transpose().conjugate()))
 
         list_rhoout = rhoout
 
     else:
         list_rhoout = []
-        for o in xrange(NumberOfOutputRhos):
+        for o in range(NumberOfOutputRhos):
             rho_in = input_rho[o]
             rhoout = np.zeros((2**NumberOfIons,2**NumberOfIons),dtype=complex)
 
-            for m in xrange(4**NumberOfIons):
-                for n in xrange(4**NumberOfIons):
+            for m in range(4**NumberOfIons):
+                for n in range(4**NumberOfIons):
                     rhoout += chi[m,n]* np.dot(A[:,:,m], np.dot(rho_in,A[:,:,n].transpose().conjugate()))
 
             list_rhoout.append(rhoout)
@@ -430,14 +430,14 @@ def mean_process_fidelity(chi_exp, chi_id, NumberOfSampleStates = 100, type_rho_
     NumberOfIons = int(np.log(len(chi_exp))/np.log(4))
 
     rho_in_list = []
-    for k in xrange(NumberOfSampleStates):
+    for k in range(NumberOfSampleStates):
         rho_in_list.append(func[type_rho_distribution](2**NumberOfIons))
 
     rho_out_exp_list = proc_channel_output(chi_exp, rho_in_list)
     rho_out_id_list = proc_channel_output(chi_id, rho_in_list)
 
     fid_list = []
-    for k in xrange(NumberOfSampleStates):
+    for k in range(NumberOfSampleStates):
         tmp = PyTIQC.evaluation.densitymatrixreconstruction.densitymatrix.DensityMatrixObject(rho_out_exp_list[k])
 
         fid = tmp.jozsafid(rho_out_id_list[k])

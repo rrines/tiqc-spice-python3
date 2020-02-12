@@ -1,5 +1,6 @@
 ''' Cirac-Zoller CNOT '''
 
+import PyTIQC
 import numpy as np
 import PyTIQC.core.simtools as sim
 import PyTIQC.core.qctools as qc

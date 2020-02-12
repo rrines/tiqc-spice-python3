@@ -6,7 +6,7 @@
 # Parallel Python Software: http://www.parallelpython.com
 
 import math, sys, time
-import pp
+from . import pp
 
 def isprime(n):
     """Returns True if n is prime and False otherwise"""
@@ -26,7 +26,7 @@ def isprime(n):
 
 def sum_primes(n):
     """Calculates sum of all primes below given integer n"""
-    return sum([x for x in xrange(2,n) if isprime(x)])
+    return sum([x for x in range(2,n) if isprime(x)])
 
 server_dict = {}
 ppservers = []
@@ -45,7 +45,7 @@ print("Starting pp with", job_server.get_ncpus(), "workers")
 start_time = time.time()
 
 # The following submits 8 jobs and then retrieves the results
-inputs = [x for x in xrange(10000, 100000, 1000)]
+inputs = [x for x in range(10000, 100000, 1000)]
 jobs = [(input, job_server.submit(sum_primes,(input,), (isprime,), ("math",))) for input in inputs]
 for input, job in jobs:
     print("Sum of primes below", input, "is", job())

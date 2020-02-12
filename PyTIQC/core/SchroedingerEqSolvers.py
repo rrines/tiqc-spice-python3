@@ -163,7 +163,7 @@ class Chebyshev_timeevo:
         tmp1 = np.arange(1,self.chebyshev_order,1)
         a_cheby[1:] = 2*(-1j)**(tmp1) * spsp.jn(tmp1,self.coef_arg)
 
-        for k in xrange(self.chebyshev_order-2):
+        for k in range(self.chebyshev_order-2):
             psi_cheby[k+2,:] = 2*np.dot(Hnow, psi_cheby[k+1,:]) - psi_cheby[k,:]
 
 
@@ -173,7 +173,7 @@ class Chebyshev_timeevo:
         return psiout
 
     def do_timeevo(self):
-        for k in xrange(self.steps-1):
+        for k in range(self.steps-1):
             self.y[:,k+1] = self.do_timestep(self.y[:,k], self.time[k])
             self.pop[:,k+1] = np.abs(self.y[:,k+1])**2
 

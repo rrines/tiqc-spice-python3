@@ -99,7 +99,7 @@ class hspace:
 
     # creation/annihilation operator for phonons
     a = np.zeros((self.maxphonons+1, self.maxphonons+1))
-    for k in xrange(self.maxphonons):
+    for k in range(self.maxphonons):
       a[k,k+1] = k+1
     a = np.sqrt(a)
     a_dagger = a.transpose()
@@ -120,9 +120,9 @@ class hspace:
     lev = self.levels
     sigm_matrix = np.zeros((lev**self.nuions, lev**self.nuions, self.nuions+1))
     sigp_matrix = np.zeros((lev**self.nuions, lev**self.nuions, self.nuions+1))
-    for k in xrange(self.nuions):
+    for k in range(self.nuions):
       a = 1
-      for l in xrange(self.nuions):
+      for l in range(self.nuions):
         if l==k:
           a = npml.kron(a,sigm)
         else:
@@ -143,9 +143,9 @@ class hspace:
         lev = self.levels
         sigmx_matrix = np.zeros((lev**self.nuions, lev**self.nuions, self.nuions+1))
         sigpx_matrix = np.zeros((lev**self.nuions, lev**self.nuions, self.nuions+1))
-        for k in xrange(self.nuions):
+        for k in range(self.nuions):
           a = 1
-          for l in xrange(self.nuions):
+          for l in range(self.nuions):
             if l==k:
               a = npml.kron(a,sigmx)
             else:
@@ -165,9 +165,9 @@ class hspace:
     elif  self.levels == 3:
         sigz = np.array([[1,0,0],[0,-1,0],[0,0,0]])
     sigz_matrix = np.zeros((lev**self.nuions, lev**self.nuions, self.nuions+1))
-    for k in xrange(self.nuions):
+    for k in range(self.nuions):
       a = 1
-      for l in xrange(self.nuions):
+      for l in range(self.nuions):
         if l==k:
           a = npml.kron(a,sigz)
         else:
@@ -263,7 +263,7 @@ class decoherence:
         # construct correlation with iterative algorithm
         f = np.exp(-1.*stepsize/tau)
         corrg[0] = gauss[0]
-        for k in xrange(len(corrg)-1):
+        for k in range(len(corrg)-1):
             corrg[k+1] = f*corrg[k] + np.sqrt(1-f**2)*gauss[k+1]
             corrg -= np.mean(corrg)
 
@@ -571,7 +571,7 @@ class parameters:
   def set_addressing(self):
     ''' modify the addressing matrix. Used by decoherence.'''
     tmp_addressing = np.zeros((self.hspace.nuions, self.hspace.nuions))
-    for k in xrange(self.hspace.nuions):
+    for k in range(self.hspace.nuions):
       tmp_addressing[k,self.hspace.nuions-k-1] = 1
       # addressing error for addressed beam
       if self.hspace.nuions-k-1 -1 >= 0:
@@ -581,8 +581,8 @@ class parameters:
 
     self.addressing = np.vstack([tmp_addressing, np.ones(self.hspace.nuions)]) # last line for global addressing
     N = self.hspace.nuions
-    for k in xrange(N):
-        middleion = [int(N)/2, int(N)/2 - (1 if N%2==0 else 0)]
+    for k in range(N):
+        middleion = [int(N)//2, int(N)//2 - (1 if N%2==0 else 0)]
         self.addressing[-1, k] = (1-self.addressingerr_global)**min([abs(k-middleion[0]), abs(k-middleion[1])])
 
   def use_rho0(self, rho0):
@@ -655,11 +655,11 @@ class pulse:
         h = qm.Hamilton()
         HT, lqc = h.Hamiltonian(self, params)
         tlen = self.theta / self.omrabi / params.eta[self.ion]
-        Ugate = splg.expm2(-1j * tlen * HT)
+        Ugate = splg.expm(-1j * tlen * HT)
         Ulqc1 = np.diag(np.exp(-1j * 0 * lqc))
         Ulqc2 = np.diag(np.exp(-1j * (-tlen) * lqc))
         U = np.mat(Ulqc2) * np.mat(Ugate) * np.mat(Ulqc1)        
-        #U = splg.expm2(-1j * tlen * HT)
+        #U = splg.expm(-1j * tlen * HT)
         self.Uid = np.asarray(U)
         self.Uidtr = np.diag(np.ones(len(np.diag(self.Uid))))
     else:
@@ -1001,7 +1001,7 @@ class PulseSequence():
 
     def prepend(self, prepend_pulses):
         """ prepend the sequence with another sequence """
-        for k in xrange(len(prepend_pulses)):
+        for k in range(len(prepend_pulses)):
             self.seq.insert(0, prepend_pulses[len(prepend_pulses)-1 -k])
         self.makepulsesequence()
         self.seqqc = self.seq
@@ -1076,7 +1076,7 @@ class PulseSequence():
 
     def getdigitalrepresentation(self):
         ''' return a time vector with 1's where a pulse is on and 0's where not, to only us precision. '''
-        t = np.zeros(self.totaltime)
+        t = np.zeros(int(self.totaltime))
         for pulse in self.seq:
             t[int(pulse.starttime) : int(pulse.endtime)] = 1
         return t
@@ -1385,10 +1385,10 @@ class database:
       traced_fig = pl.figure(displ)
       traced_fig.clf()
       ax = traced_fig.add_subplot(111)
-      pl.hold(True)
+      # pl.hold(True)
       for i in range(self.nuions):
         ax.plot(self.T, 1-self.YtrI[:,i], label="ion %d"%(self.nuions-i-1)) #count ions in reverse
-      pl.hold(False)
+      # pl.hold(False)
 
       pl.ylim(0,1)
       ax.legend()
@@ -1419,7 +1419,7 @@ class database:
       population_fig.clf()
       for j in range(self.nuions*self.levels):
         ax = population_fig.add_subplot(self.nuions*self.levels, 1, j+1)
-        ax.hold(True)
+        # ax.hold(True)
         for k in range(self.phonons):
           if self.hspace.visible[j*self.phonons+k]:
             ax.plot(self.T, self.YR[:,j*self.phonons+k], \
@@ -1427,7 +1427,7 @@ class database:
             pl.ylim(0,1)
             pl.ylabel('population')
 
-        ax.hold(False)
+        # ax.hold(False)
         if plotlegend:
           ax.legend()
 
@@ -1452,7 +1452,7 @@ class database:
     fake_hspace = copy.deepcopy(self.hspace)
     fake_hspace.maxphonons = 0
 
-    for k in xrange(2**self.nuions):
+    for k in range(2**self.nuions):
       # get number of excitations, add to the corresponding column
       # in the PMT populations
       NumberOfExcitations = qm.indexToExcitations(k, fake_hspace)
@@ -1474,13 +1474,13 @@ class database:
       pmtpopulation_fig.clf()
 
       ax = pmtpopulation_fig.add_subplot(111)
-      ax.hold(True)
+      # ax.hold(True)
 
-      for k in xrange(self.nuions+1):
+      for k in range(self.nuions+1):
         ax.plot(self.T, self.P_PMT[:,k], label = str(k))
         pl.ylim(0,1)
 
-      ax.hold(False)
+      # ax.hold(False)
       if plotlegend:
         ax.legend()
 
@@ -1503,7 +1503,7 @@ class database:
     x_op = a_full+a_dagger_full
     p_op = 1j*(a_full-a_dagger_full)
 
-    for k in xrange(len(self.T)):
+    for k in range(len(self.T)):
       Y_tmp = self.Y[k,:]
 
       x = np.real(np.dot(np.dot(Y_tmp.conjugate().transpose(), x_op ), Y_tmp))
@@ -1540,7 +1540,7 @@ def DecayedPopulations_CCD(populations, params):
 
     populations_decayed = np.zeros(len(populations))
     # make sure everything is float
-    for k in xrange(len(populations)):
+    for k in range(len(populations)):
       populations_decayed[k] = populations[k]
 
     # standard labeling starting with D..D to S...S
@@ -1556,7 +1556,7 @@ def DecayedPopulations_CCD(populations, params):
     # we'll then sample from that
     decay_prob = 1 - np.exp(-params.detection_time_ccd*1. / params.lifetime)
 
-    for k in xrange(len(populations)):
+    for k in range(len(populations)):
       # for each population
       StateArray = qm.indexToState(k, fake_hspace)[1] # with D = 0
 #      print(StateArray)
@@ -1593,7 +1593,7 @@ def generate_decay_list(statearray_list, decays=1):
     for statearray in statearray_list:
         if type(statearray) == np.ndarray:
             statearray = statearray.tolist()
-        for k in xrange(len(statearray)):
+        for k in range(len(statearray)):
             if statearray[k] == 0:
                 statearray_decayed = copy.copy(statearray)
                 statearray_decayed[k] = 1
@@ -1618,7 +1618,7 @@ def DecayedExcitations_PMT(excitations, params):
     """
     excitations_decayed = np.zeros(len(excitations))
     # make sure everything is float
-    for k in xrange(len(excitations)):
+    for k in range(len(excitations)):
       excitations_decayed[k] = excitations[k]
 
     # standard labeling starting with D..D to S...S
@@ -1633,10 +1633,10 @@ def DecayedExcitations_PMT(excitations, params):
     # for k in np.arange(1,len(excitations)+1):
     #   all_perms += nchoosek(NumberOfIons,k)
 
-    for k in xrange(len(excitations)):
+    for k in range(len(excitations)):
       # for each excitation
       ex = NumberOfIons - k
-      for l in xrange(ex+1):
+      for l in range(ex+1):
         # l = number of decays
         if l > 0:
           ex_shifted = nchoosek(ex, l) * decay_prob**l * (1-decay_prob)**(ex-l) * excitations[k]

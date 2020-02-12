@@ -1,9 +1,9 @@
 ''' Ramsey sequence with/without decoherence '''
 
 import numpy as np
-import PyTIQC.core.simtools as sim
-import PyTIQC.core.qctools as qc
-import PyTIQC.tools.progressbar as progbar
+from PyTIQC.core import simtools as sim
+from PyTIQC.core import qctools as qc
+from PyTIQC.tools import progressbar as progbar
 from scipy.optimize import leastsq
 import matplotlib.pyplot as pl
 
@@ -74,7 +74,7 @@ def doRamseyFit(data1):
 ##################
 if doRun:
     data1, fitfun, par = doRamseyRun(hspace, params, dec)
-    print "coherence time (us) = ", par[-1]
+    print("coherence time (us) = ", par[-1])
     pl.plot(data1.T, data1.YtrI)
     pl.plot(data1.T, fitfun(par, data1.T))
     pl.show()

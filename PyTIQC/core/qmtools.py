@@ -69,7 +69,7 @@ class Hamilton:
         hspace = params.hspace
         nuions = params.hspace.nuions
         sys = np.zeros((hspace.levels**hspace.nuions,hspace.levels**hspace.nuions))
-        for k in xrange(hspace.nuions): 
+        for k in range(hspace.nuions): 
             sys += hspace.operator_dict['sigz'][:,:,k] * pulse.targetion[nuions-k-1]
         hz = npml.kron( sys, hspace.operator_dict['id_a'] )
         hz_diag = np.diag(hz)
@@ -102,23 +102,23 @@ class Hamilton:
                           (hspace.maxphonons+1)*hspace.levels**hspace.nuions ), \
                               np.complex128)
         if LDApprox:
-            for k in xrange(hspace.nuions):
+            for k in range(hspace.nuions):
                 #etak = eta[-1] if pulse.ion == -1 else eta[k]
                 sys_ho += npml.kron( targetion[k]*opdict['raising'][:,:,k],\
                                np.diag(np.ones(hspace.maxphonons+1)) + \
                                1j * eta[k] * (opdict['a']+opdict['a_dag']) )
         else:
-            for k in xrange(hspace.nuions):
+            for k in range(hspace.nuions):
                 #etak = eta[-1] if pulse.ion == -1 else eta[k]
                 sys_ho += npml.kron( targetion[k]*opdict['raising'][:,:,k],\
-                               splg.expm2(1j * eta[k] * (opdict['a']+opdict['a_dag'])) )
+                               splg.expm(1j * eta[k] * (opdict['a']+opdict['a_dag'])) )
 
         # multiply with rabi-frequency part
         H = prefac * sys_ho
 
         # diagonal terms
         sysz = np.zeros((hspace.levels**hspace.nuions,hspace.levels**hspace.nuions))
-        for k in xrange(hspace.nuions):
+        for k in range(hspace.nuions):
             sysz += opdict['sigz'][:,:,k] * 1/2.
         energies = -detuning * npml.kron(sysz, opdict['id_a']) + \
                    wsec * npml.kron(np.diag(np.ones(hspace.levels**hspace.nuions)), \
@@ -174,7 +174,7 @@ class Hamilton:
 
         # calculate the coupling based on the addressing errors
         sys = np.zeros((hspace.levels**hspace.nuions,hspace.levels**hspace.nuions))
-        for k in xrange(hspace.nuions):
+        for k in range(hspace.nuions):
             sys += targetion[k]*hspace.operator_dict['raising'][:,:,k]
 
         # Lamb-Dicke approximation yes/no?
@@ -182,7 +182,7 @@ class Hamilton:
         if LDApprox:
             sys_ho = lambda t: npml.kron( sys, np.diag(np.ones(hspace.maxphonons+1)) + LDpart(t) )
         else:
-            sys_ho = lambda t: npml.kron( sys, splg.expm2( LDpart(t)) )
+            sys_ho = lambda t: npml.kron( sys, splg.expm( LDpart(t)) )
 
         # multiply with rabi-frequency part
         H = lambda t: prefac(t) * sys_ho(t)
@@ -250,7 +250,7 @@ class Noise:
             and search with searchsorted '''
         hspace = params.hspace
         sys = np.zeros((hspace.levels**hspace.nuions,hspace.levels**hspace.nuions))
-        for k in xrange(hspace.nuions):
+        for k in range(hspace.nuions):
             sys += hspace.operator_dict['sigz'][:,:,k]
         noise_ho = npml.kron( sys, hspace.operator_dict['id_a'] )
 
@@ -364,7 +364,7 @@ def indexToState(ind, hspace):
         return np.array(numarr)
 
     # state can be expressed in binary
-    indstate = (ind - phonon) / (maxphonons+1)
+    indstate = (ind - phonon) // (maxphonons+1)
     # statestr is a string like |SS,0>
     # statenum is an array of 0,1,2's
     statestr = np.base_repr(indstate, base=levels).zfill(nuions)
