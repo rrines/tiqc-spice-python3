@@ -22,9 +22,9 @@ class Job:
     
 class Res:
     def __init__(self,res):
-        self.res = res
+        self.res = [res]
     def __call__(self):
-        return self.res
+        return self.res.pop()
 
 class Server:
     def __init__(self,ncpus=None,ppservers=None,secret=None):

@@ -5,8 +5,8 @@ import PyTIQC.core.simtools as sim
 import PyTIQC.core.qctools as qc
 import time
 import matplotlib.pyplot as pl
-import PyTIQC.tools.progressbar as progbar
 import scipy.optimize as spop
+from PyTIQC.tools import progressbar as progbar
 
 pi = np.pi
 

@@ -63,7 +63,13 @@ def main():
     # load the pulse sequences
     # change ion order and define permutations
     ##########################################
-    execfile(pulseseqfileShor,locals(),globals())
+    # execfile(pulseseqfileShor,locals(),globals())
+    def makeexec(f):
+        f = os.path.normpath(os.path.join(os.path.dirname(__file__),'..',f))
+        c = compile(open(f,'rb').read(),f,'exec')
+        return c
+
+    exec(makeexec(pulseseqfileShor))
 
     cnot12_6 = sim.PulseSequence([ cnot12 ])
 

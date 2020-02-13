@@ -10,7 +10,7 @@ import matplotlib.pyplot as pl
 import PyTIQC.evaluation.EvaluateData as evd
 
 import time
-import shelve, copy, inspect
+import shelve, copy, inspect, os
 
 pi = np.pi
 
@@ -29,7 +29,11 @@ calc_spontdecay_during_measurement = False
 
 #################################################
 files_dict = {}
-idealrho = shelve.open('experiments/qft-ideal-rho.shlv')
+
+def fixpath(f):
+    return os.path.normpath(os.path.join(os.path.dirname(__file__),'..',f))
+
+idealrho = shelve.open(fixpath('experiments/qft-ideal-rho.shlv'))
 if initstate == 1:     # SSS
     idealdata = idealrho['sss']
 elif initstate == 2:   # P2
@@ -59,7 +63,14 @@ dec.dict['spontdecay'] = True
 dec.doPP = doPP
 dec.doPPprintstats=False
 
-execfile(pulseseqfile)
+# execfile(pulseseqfile)
+def makeexec(f):
+    f = fixpath(f)
+    c = compile(open(f,'rb').read(),f,'exec')
+    return c
+
+exec(makeexec(pulseseqfile))
+
 pulseseq = QFTseq
 if initstate == 2:
     QFTseqP2.extend(pulseseq)

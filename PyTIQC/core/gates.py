@@ -3,7 +3,7 @@
 import numpy as np
 from scipy import linalg
 import copy
-import matplotlib.pylab as pl
+import matplotlib.pyplot as pl
 from mpl_toolkits.mplot3d import Axes3D
 import PyTIQC.tools.quantum_tools as qtls
 

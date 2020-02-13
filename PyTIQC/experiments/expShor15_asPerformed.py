@@ -54,7 +54,13 @@ Kit = Kitaev.Kitaev()
 # load the pulse sequences
 # change ion order and define permutations
 ##########################################
-execfile(pulseseqfileShor)
+# execfile(pulseseqfileShor)
+def makeexec(f):
+    f = os.path.normpath(os.path.join(os.path.dirname(__file__),'..',f))
+    c = compile(open(f,'rb').read(),f,'exec')
+    return c
+
+exec(makeexec(pulseseqfileShor))
 
 shor7b1 = copy.deepcopy(Fredkin)
 shor7b2 = copy.deepcopy(Fredkin)

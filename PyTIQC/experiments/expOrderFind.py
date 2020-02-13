@@ -7,7 +7,7 @@ import PyTIQC.core.qctools as qc
 import PyTIQC.core.gates as U
 import matplotlib.pyplot as pl
 
-import time, sys, copy
+import time, sys, copy, os
 
 import Kitaev 
 reload(Kitaev)
@@ -17,8 +17,8 @@ pi = np.pi
 order3ideal = np.array([0.3438, 0.0145, 0.0625 , 0.2355 ,0.0312, 0.2355, 0.0625, 0.0145])
 
 ### run params ##################################
-pulseseqfileOF = 'experiments/Orderfindseq.py'
-pulseseqfileQFT = 'experiments/QFTseq.py'
+pulseseqfileOF = 'experiments/Orderfindseq.py')
+pulseseqfileQFT = 'experiments/QFTseq.py')
 
 doRun = True
 doIdeal = True
@@ -56,8 +56,17 @@ dec.dict['all'] = True
 # load the pulse sequences
 # change ion order and define permutations
 ##########################################
-execfile(pulseseqfileOF)
-execfile(pulseseqfileQFT)
+
+def makeexec(f):
+    f = os.path.normpath(os.path.join(os.path.dirname(__file__),'..',f))
+    c = compile(open(f,'rb').read(),f,'exec')
+    return c
+
+# execfile(pulseseqfileOF)
+# execfile(pulseseqfileQFT)
+exec(makeexec(pulseseqfileOF))
+exec(makeexec(pulseseqfileQFT))
+
 if not doKitaev:
     order1.changeions(params, (4,3,2))
     order2.changeions(params, (4,3,2))

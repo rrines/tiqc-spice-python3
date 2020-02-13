@@ -10,7 +10,7 @@ import PyTIQC.core.qctools as qc
 import PyTIQC.core.simtools as sim
 import numpy as np
 
-import pylab as pl
+# import pylab as pl
 
 from scipy.optimize import leastsq
 

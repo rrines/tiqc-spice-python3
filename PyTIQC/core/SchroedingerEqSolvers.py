@@ -18,7 +18,6 @@
 import numpy as np
 import numpy.matlib as npml
 import scipy.integrate as scint
-import pylab as pl
 import scipy.linalg as splnlg
 import scipy.special as spsp
 import time
@@ -180,6 +179,8 @@ class Chebyshev_timeevo:
 
 
 if __name__ == "__main__":
+
+    import pylab as pl
 
     # ------------------
     # settings

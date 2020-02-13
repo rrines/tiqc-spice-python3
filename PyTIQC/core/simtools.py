@@ -5,7 +5,8 @@ import numpy.matlib as npml
 import scipy.misc as smisc
 import scipy.linalg as splg
 import scipy.constants as constants
-import pylab as pl
+from matplotlib import pyplot as pl
+# import pylab as pl
 from mpl_toolkits.mplot3d import Axes3D
 
 from . import qmtools as qm
