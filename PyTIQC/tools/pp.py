@@ -29,15 +29,11 @@ class Res:
 class Server:
     def __init__(self,ncpus=None,ppservers=None,secret=None):
         if ncpus == 'autodetect':
-            ncpus = min(2,_os.cpu_count()//2)
-            ncpus = 1
+            ncpus = _os.cpu_count()//2
         elif ncpus:
             ncpus = min(ncpus,_os.cpu_count())
-            ncpus = 1
-            assert ncpus > 0
         else:
             ncpus = None
-        ncpus = None
 
         # if ppservers or secret:
         #     print('WARNING: external nodes not supported (requested',ppservers,\
@@ -47,12 +43,13 @@ class Server:
         self.ppservers = ppservers
         self.secret = secret
 
-        if ncpus is None:
-            self.pool = None
-            self.logger = _logging.getLogger()
-        else:
+        if ncpus:
+            assert ncpus > 0
             self.pool = _mp.Pool(processes=ncpus)
             self.logger = _mp.get_logger()
+        else:
+            self.pool = None
+            self.logger = _logging.getLogger()
         
     def get_ncpus(self):
         return self.ncpus
